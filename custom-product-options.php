@@ -108,4 +108,3 @@ function custom_product_options_order_meta_handler( $item_id, $values, $cart_ite
     }
 }
 add_action( 'woocommerce_add_order_item_meta', 'custom_product_options_order_meta_handler', 10, 3 );
-
