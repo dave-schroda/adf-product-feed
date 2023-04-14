@@ -15,21 +15,32 @@ jQuery(function ($) {
       const data = await response.json();
       console.log('Data:', data);
 
-      // Get the markup percentage from the options page
-      const markupPercentage = parseFloat(custom_product_options_get_option('markup_percentage'));
-
-      // Loop through the data and update the prices with the markup percentage
+      // Convert the values to numbers
       const updatedData = data.map(item => {
         const updatedItem = {...item};
         for (const key in updatedItem) {
           if (key !== 'Size') {
-            updatedItem[key] = parseFloat(updatedItem[key]) * (1 + markupPercentage / 100);
+            updatedItem[key] = parseFloat(updatedItem[key]);
           }
         }
         return updatedItem;
       });
 
-      return updatedData;
+      // Get the markup percentage from the options page
+      const markupPercentage = parseFloat(custom_product_options_get_option('markup_percentage'));
+
+      // Loop through the data and update the prices with the markup percentage
+      const formattedData = updatedData.map(item => {
+        const formattedItem = {...item};
+        for (const key in formattedItem) {
+          if (key !== 'Size') {
+            formattedItem[key] = formattedItem[key] * (1 + markupPercentage / 100);
+          }
+        }
+        return formattedItem;
+      });
+
+      return formattedData;
     } catch (error) {
       console.error('Error fetching CSV data:', error);
     }
@@ -71,11 +82,11 @@ jQuery(function ($) {
 
   async function displayCsvOptions(jsonFile, elementId) {
     console.log('Displaying CSV options for:', jsonFile);
-    const data = await fetchCsvData(`${customJsData.pluginUrl}${jsonFile}`);
-    console.log('JSON data:', data);
+    const formattedData = await fetchCsvData(`${customJsData.pluginUrl}${jsonFile}`);
+    console.log('JSON data:', formattedData);
 
-    const woodOptions = Array.from(new Set(Object.keys(data[0]).filter(key => key !== 'Size')));
-    const sizeOptions = Array.from(new Set(data.map(item => item.Size)));
+    const woodOptions = Array.from(new Set(Object.keys(formattedData[0]).filter(key => key !== 'Size')));
+    const sizeOptions = Array.from(new Set(formattedData.map(item => item.Size)));
 
     const container = document.getElementById(elementId);
 
@@ -112,7 +123,7 @@ jQuery(function ($) {
     container.appendChild(woodSelect);
     container.appendChild(sizeSelect);
 
-    const updatePriceWithScope = () => updatePrice(data);
+    const updatePriceWithScope = () => updatePrice(formattedData);
     woodSelect.addEventListener('change', updatePriceWithScope);
     sizeSelect.addEventListener('change', updatePriceWithScope);
   }
