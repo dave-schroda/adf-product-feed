@@ -46,7 +46,7 @@ function custom_product_options_settings_page() {
 function custom_product_options_get_option($option_name) {
   global $custom_markup_percentage;
 
-  $option_value = get_option($option_name);
+  $$option_value = get_option($option_name, 0);
 
   if (!$option_value) {
     switch ($option_name) {
