@@ -57,10 +57,12 @@ jQuery(function ($) {
     if (product) {
       const price = parseFloat(product[selectedWood]);
       if (!isNaN(price)) {
-        originalPriceElement.innerHTML = `<span class="woocommerce-Price-currencySymbol">$</span>${price.toFixed(2)}`;
+        const markupPercentage = parseFloat(customJsData.customMarkupPercentage);
+        const updatedPrice = Math.ceil(price * (markupPercentage / 100));
+        originalPriceElement.innerHTML = `<span class="woocommerce-Price-currencySymbol">$</span>${updatedPrice.toFixed(2)}`;
 
         // Trigger a custom event to inform the plugin that the price has changed
-        const priceChangeEvent = new CustomEvent('priceChange', { detail: { price } });
+        const priceChangeEvent = new CustomEvent('priceChange', { detail: { price: updatedPrice } });
         originalPriceElement.dispatchEvent(priceChangeEvent);
       } else {
         originalPriceElement.innerHTML = 'Product not found.';
