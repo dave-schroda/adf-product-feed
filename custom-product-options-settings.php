@@ -23,8 +23,69 @@ function custom_product_options_settings_page() {
   <?php
 }
 
-if (isset($_POST['markup_percentage'])) {
-  $custom_markup_percentage = $_POST['markup_percentage'];
-  update_option('markup_percentage', $custom_markup_percentage);
-  echo '<div class="notice notice-success"><p>Markup percentage saved.</p></div>';
+function custom_product_options_settings() {
+  add_submenu_page(
+    'woocommerce',
+    'Custom Product Options Settings',
+    'Custom Product Options',
+    'manage_options',
+    'custom-product-options-settings',
+    'custom_product_options_settings_page'
+  );
+
+  // Register settings
+  add_action('admin_init', 'custom_product_options_register_settings');
+}
+add_action('admin_menu', 'custom_product_options_settings');
+
+// Register settings
+function custom_product_options_register_settings() {
+  register_setting(
+    'custom_product_options_settings_group',
+    'markup_percentage',
+    array(
+      'type' => 'string',
+      'sanitize_callback' => function ($value) {
+        return filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+      }
+    )
+  );
+}
+
+
+add_action( 'admin_init', 'custom_product_options_settings' );
+
+// Render the markup percentage field
+function custom_product_options_markup_percentage_field() {
+  $value = get_option( 'markup_percentage' );
+  ?>
+  <input type="number" name="markup_percentage" id="markup_percentage" value="<?php echo esc_attr( $value ); ?>" class="regular-text" min="0" max="100" step="0.01">
+  <?php
+}
+// Define the markup percentage as a global variable
+global $custom_markup_percentage;
+$custom_markup_percentage = get_option('custom_markup_percentage');
+
+function custom_product_options_get_option($option_name) {
+  global $custom_markup_percentage;
+
+  $option_value = get_option($option_name, 0);
+
+  if (!$option_value) {
+    switch ($option_name) {
+      case 'custom_markup_percentage':
+        if ($custom_markup_percentage) {
+          $option_value = $custom_markup_percentage;
+        } else {
+          $option_value = 1;
+        }
+        break;
+      default:
+        $option_value = '';
+        break;
+    }
+    add_option($option_name, $option_value);
+  }
+
+  return $option_value;
 }
