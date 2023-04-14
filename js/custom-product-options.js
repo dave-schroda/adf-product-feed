@@ -9,10 +9,15 @@ jQuery(function ($) {
 
   async function fetchCsvData(jsonFileUrl) {
     try {
-      console.log('Fetching data from:', jsonFileUrl);
-      const response = await fetch(`${customJsData.pluginUrl}product-csv-files/${jsonFileUrl}`);
+      const fileUrl = `${customJsData.pluginUrl}product-csv-files/${jsonFileUrl}`;
+      console.log('Fetching data from:', fileUrl);
+      const response = await fetch(fileUrl);
       console.log('Response:', response);
-      const data = await response.json();
+      const csvData = await response.text();
+      
+      // Parse CSV data using PapaParse library
+      const parsedData = Papa.parse(csvData, { header: true });
+      const data = parsedData.data;
 
       // Get the markup percentage from the options page
       const markupPercentage = parseFloat(custom_product_options_get_option('markup_percentage'));
