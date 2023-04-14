@@ -1,6 +1,10 @@
 jQuery(function ($) {
   console.log('Script is running');
 
+  function custom_product_options_get_option(option_name) {
+    return customJsData[option_name];
+  }
+
   let data; // Declare data as a global variable
 
   async function fetchCsvData(jsonFileUrl) {
@@ -10,10 +14,10 @@ jQuery(function ($) {
       console.log('Response:', response);
       const data = await response.json();
       console.log('Data:', data);
-          
+
       // Get the markup percentage from the options page
       const markupPercentage = parseFloat(custom_product_options_get_option('markup_percentage'));
-        
+
       // Loop through the data and update the prices with the markup percentage
       const updatedData = data.map(item => {
         const updatedItem = {...item};
@@ -49,7 +53,7 @@ jQuery(function ($) {
     }
 
     const product = data.find(item => item.Size === selectedSize);
-    if (product && selectedWood in product) {
+    if (product) {
       const price = parseFloat(product[selectedWood]);
       if (!isNaN(price)) {
         originalPriceElement.innerHTML = `<span class="woocommerce-Price-currencySymbol">$</span>${price.toFixed(2)}`;
@@ -57,11 +61,12 @@ jQuery(function ($) {
         // Trigger a custom event to inform the plugin that the price has changed
         const priceChangeEvent = new CustomEvent('priceChange', { detail: { price } });
         originalPriceElement.dispatchEvent(priceChangeEvent);
+      } else {
+        originalPriceElement.innerHTML = 'Product not found.';
+      }
     } else {
-      originalPriceElement.innerHTML = 'Invalid price data for selected product.';
+      originalPriceElement.innerHTML = 'Product not found.';
     }
-  } else {
-    originalPriceElement.innerHTML = 'Selected product not found.';
   }
 
   async function displayCsvOptions(jsonFile, elementId) {
@@ -110,10 +115,6 @@ jQuery(function ($) {
     const updatePriceWithScope = () => updatePrice(data);
     woodSelect.addEventListener('change', updatePriceWithScope);
     sizeSelect.addEventListener('change', updatePriceWithScope);
-  }
-
-  function custom_product_options_get_option(option_name) {
-    return customJsData[option_name];
   }
 
   function init() {
