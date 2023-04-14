@@ -1,79 +1,54 @@
 <?php
 /**
  * Plugin Name: Custom Product Options
- * Description: A custom WordPress plugin to add product options and price calculations based on a JSON file.
+ * Description: A custom WordPress plugin to add product options and price calculations based on a CSV file.
  * Version: 1.0
- * Author: David Schroeder
- * Author URI: https://amishdirectfurniture.com
+ * Author: Your Name
+ * Author URI: https://yourwebsite.com
  */
 
 // Define the markup percentage as a global variable
 global $custom_markup_percentage;
-$custom_markup_percentage = get_option('custom_markup_percentage');
+$custom_markup_percentage = get_option('markup_percentage');
 
 // Add the settings menu
 function custom_product_options_add_settings_link($links) {
-  $settings_link = '<a href="admin.php?page=custom-product-options">' . __('Settings') . '</a>';
+  $settings_link = '<a href="admin.php?page=custom-product-options-settings">' . __('Settings') . '</a>';
   array_push($links, $settings_link);
   return $links;
 }
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'custom_product_options_add_settings_link');
 
-
-function custom_product_options_settings_menu() {
-  add_options_page(
-    'Custom Product Options Settings', // page title
-    'Custom Product Options', // menu title
-    'manage_options', // capability
-    'custom-product-options-settings', // menu slug
-    'custom_product_options_settings_page' // callback function
-  );
-}
-add_action('admin_menu', 'custom_product_options_settings_menu');
-
-
-
-// Define the settings page
 function custom_product_options_settings_page() {
-  global $custom_markup_percentage;
-
-  // Check user capabilities
-  if (!current_user_can('manage_options')) {
-    return;
-  }
-
-  // Save the submitted form
-  if (isset($_POST['custom_markup_percentage'])) {
-    $custom_markup_percentage = $_POST['custom_markup_percentage'];
-    update_option('custom_markup_percentage', $custom_markup_percentage);
-    echo '<div class="notice notice-success"><p>Markup percentage saved.</p></div>';
-  }
   ?>
-
   <div class="wrap">
-    <h1>Custom Product Options Settings</h1>
-
-    <form method="post" action="">
+    <h1><?php esc_html_e( 'Custom Product Options Settings', 'custom-product-options' ); ?></h1>
+    <form method="post" action="options.php">
+      <?php settings_fields( 'custom_product_options_settings_group' ); ?>
+      <?php do_settings_sections( 'custom_product_options_settings_group' ); ?>
       <table class="form-table">
         <tr>
-          <th scope="row"><label for="custom_markup_percentage">Markup Percentage</label></th>
-          <td><input type="text" name="custom_markup_percentage" id="custom_markup_percentage" value="<?php echo esc_attr($custom_markup_percentage); ?>" class="regular-text" /></td>
+          <th scope="row">
+            <label for="markup_percentage"><?php esc_html_e( 'Markup Percentage', 'custom-product-options' ); ?></label>
+          </th>
+          <td>
+            <input type="number" name="markup_percentage" id="markup_percentage" value="<?php echo esc_attr( get_option( 'markup_percentage' ) ); ?>" class="regular-text" min="0" max="100" step="0.01">
+            <p class="description"><?php esc_html_e( 'Enter the markup percentage to add to the price of each product.', 'custom-product-options' ); ?></p>
+          </td>
         </tr>
       </table>
-      <?php submit_button('Save Changes'); ?>
+      <?php submit_button(); ?>
     </form>
   </div>
-
   <?php
 }
 
 function custom_product_options_get_option($option_name) {
-  global $wpdb, $custom_markup_percentage;
+  global $custom_markup_percentage;
 
   $option_value = get_option($option_name);
 
   if (!$option_value) {
-    // If the option doesn't exist, create it with a default value
     switch ($option_name) {
       case 'markup_percentage':
         if ($custom_markup_percentage) {
@@ -94,8 +69,7 @@ function custom_product_options_get_option($option_name) {
 
 // Enqueue the JavaScript files
 function custom_product_options_enqueue_scripts() {
-  // Get the markup percentage from the options page
-  $custom_markup_percentage = custom_product_options_get_option('markup_percentage');
+  global $custom_markup_percentage;
 
   $script_url = plugin_dir_url(__FILE__) . 'js/custom-product-options.js';
 
@@ -111,7 +85,6 @@ function custom_product_options_enqueue_scripts() {
   wp_enqueue_script('custom-product-options');
 }
 add_action('wp_enqueue_scripts', 'custom_product_options_enqueue_scripts');
-
 
 function custom_product_options_add_menu_item() {
   add_submenu_page(
