@@ -49,7 +49,7 @@ jQuery(function ($) {
     }
 
     const product = data.find(item => item.Size === selectedSize);
-    if (product) {
+    if (product && selectedWood in product) {
       const price = parseFloat(product[selectedWood]);
       if (!isNaN(price)) {
         originalPriceElement.innerHTML = `<span class="woocommerce-Price-currencySymbol">$</span>${price.toFixed(2)}`;
@@ -57,12 +57,11 @@ jQuery(function ($) {
         // Trigger a custom event to inform the plugin that the price has changed
         const priceChangeEvent = new CustomEvent('priceChange', { detail: { price } });
         originalPriceElement.dispatchEvent(priceChangeEvent);
-      } else {
-        originalPriceElement.innerHTML = 'Product not found.';
-      }
     } else {
-      originalPriceElement.innerHTML = 'Product not found.';
+      originalPriceElement.innerHTML = 'Invalid price data for selected product.';
     }
+  } else {
+    originalPriceElement.innerHTML = 'Selected product not found.';
   }
 
   async function displayCsvOptions(jsonFile, elementId) {
