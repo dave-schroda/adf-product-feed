@@ -44,43 +44,39 @@ add_action('admin_menu', 'custom_product_options_add_menu_item');
  * Add custom product options to cart item data
  */
 function custom_product_options_add_to_cart( $cart_item_data, $product_id, $variation_id ) {
-  $custom_data = array();
+    $custom_data = array();
 
-  // Get selected options
-  if ( isset( $_POST['woodSelect'] ) ) {
-    $custom_data['Wood'] = sanitize_text_field( $_POST['woodSelect'] );
-  }
-
-  if ( isset( $_POST['sizeSelect'] ) ) {
-    $custom_data['Size'] = sanitize_text_field( $_POST['sizeSelect'] );
-  }
-
-  if ( ! empty( $custom_data ) ) {
-    // Find the product based on selected wood and size
-    $product = custom_product_options_find_product( $custom_data['Size'], $custom_data['Wood'] );
-
-    if ( $product ) {
-      $price = $product[ $custom_data['Wood'] ];
-
-      // Get the markup percentage from the options page
-      $custom_markup_percentage = get_option( 'custom_markup_percentage', 0 );
-      $markupPercentage = floatval( $custom_markup_percentage );
-
-      if ( $markupPercentage > 0 ) {
-        $price = ceil( $price * ( 1 + $markupPercentage / 100 ) );
-      }
-
-      $cart_item_data['custom_data'] = $custom_data;
-      $cart_item_data['price'] = $price;
+    // Get selected options
+    if ( isset( $_POST['woodSelect'] ) ) {
+        $custom_data['Wood'] = sanitize_text_field( $_POST['woodSelect'] );
     }
-  }
 
-  return $cart_item_data;
+    if ( isset( $_POST['sizeSelect'] ) ) {
+        $custom_data['Size'] = sanitize_text_field( $_POST['sizeSelect'] );
+    }
+
+    if ( ! empty( $custom_data ) ) {
+        // Find the product based on selected wood and size
+        $product = custom_product_options_find_product( $custom_data['Size'], $custom_data['Wood'] );
+
+        if ( $product ) {
+            $price = $product[ $custom_data['Wood'] ];
+
+            if ( isset( $custom_data['price'] ) ) {
+                $price = $custom_data['price'];
+            }
+
+            $cart_item_data['custom_data'] = $custom_data;
+            $cart_item_data['data']->set_price( $price );
+        }
+    }
+
+    return $cart_item_data;
 }
 add_filter( 'woocommerce_add_cart_item_data', 'custom_product_options_add_to_cart', 10, 3 );
 
 /**
- *Display selected options on cart and checkout pages
+ * Display selected options on cart and checkout pages
  */
 function custom_product_options_display_cart( $item_data, $cart_item ) {
     if ( isset( $cart_item['custom_data'] ) ) {
@@ -89,29 +85,41 @@ function custom_product_options_display_cart( $item_data, $cart_item ) {
         // Get selected wood, size and price
         $wood = isset( $custom_data['Wood'] ) ? $custom_data['Wood'] : '';
         $size = isset( $custom_data['Size'] ) ? $custom_data['Size'] : '';
-        $price = isset( $custom_data['Price'] ) ? wc_price( $custom_data['Price'] ) : '';
+        $price = $cart_item['data']->get_price();
 
-        if ( ! empty( $wood ) && ! empty( $size ) && ! empty( $price ) ) {
-            $item_data[] = array(
-                'key'   => 'Wood',
-                'value' => $wood,
-            );
+        if ( ! empty( $wood ) && ! empty( $size ) ) {
+            // Find the product based on selected wood and size
+            $product = custom_product_options_find_product( $size, $wood );
 
-            $item_data[] = array(
-                'key'   => 'Size',
-                'value' => $size,
-            );
+            if ( $product ) {
+                if ( isset( $custom_data['price'] ) ) {
+                    $price = $custom_data['price'];
+                } else {
+                    $price = $product[ $wood ];
+                }
 
-            $item_data[] = array(
-                'key'   => 'Price',
-                'value' => $price,
-            );
+                $item_data[] = array(
+                    'key'   => 'Wood',
+                    'value' => $wood,
+                );
+
+                $item_data[] = array(
+                    'key'   => 'Size',
+                    'value' => $size,
+                );
+
+                $item_data[] = array(
+                    'key'   => 'Price',
+                    'value' => wc_price( $price ),
+                );
+            }
         }
     }
 
     return $item_data;
 }
-add_filter( 'woocommerce_add_cart_item_data', 'add_size_to_cart_item_data', 10, 3 );
+add_filter( 'woocommerce_get_item_data', 'custom_product_options_display_cart', 10, 2 );
+
 function add_size_to_cart_item_data($cart_item_data, $product_id, $variation_id ){
     if( isset( $_POST['product-size'] ) ) {
         $cart_item_data['product-size'] = esc_attr( $_POST['product-size'] );
@@ -141,3 +149,40 @@ function custom_product_options_update_cart_item_data( $cart_item_key, $values )
   }
 }
 add_action( 'woocommerce_cart_item_data_updated', 'custom_product_options_update_cart_item_data', 10, 2 );
+
+// Modify displayed price on order confirmation email
+function custom_product_options_modify_order_item_price( $price_html, $cart_item, $cart_item_key ) {
+  if ( isset( $cart_item['custom_data'] ) ) {
+    $custom_data = $cart_item['custom_data'];
+
+    // Get selected wood, size and price
+    $wood = isset( $custom_data['Wood'] ) ? $custom_data['Wood'] : '';
+    $size = isset( $custom_data['Size'] ) ? $custom_data['Size'] : '';
+    $price = isset( $custom_data['Price'] ) ? $custom_data['Price'] : '';
+
+    if ( ! empty( $wood ) && ! empty( $size ) && ! empty( $price ) ) {
+      $price_html = wc_price( $price );
+    }
+  }
+  return $price_html;
+}
+add_filter( 'woocommerce_cart_item_price', 'custom_product_options_modify_order_item_price', 10, 3 );
+
+// Add selected options and updated price to order item table in email
+function custom_product_options_add_order_item_meta( $item, $cart_item_key, $values, $order ) {
+  if ( isset( $values['custom_data'] ) ) {
+    $custom_data = $values['custom_data'];
+
+    // Get selected wood, size and price
+    $wood = isset( $custom_data['Wood'] ) ? $custom_data['Wood'] : '';
+    $size = isset( $custom_data['Size'] ) ? $custom_data['Size'] : '';
+    $price = isset( $custom_data['Price'] ) ? $custom_data['Price'] : '';
+
+    if ( ! empty( $wood ) && ! empty( $size ) && ! empty( $price ) ) {
+      $item->add_meta_data( 'Wood', $wood );
+      $item->add_meta_data( 'Size', $size );
+      $item->add_meta_data( 'Price', wc_price( $price ) );
+    }
+  }
+}
+add_action( 'woocommerce_email_order_item_quantity', 'custom_product_options_add_order_item_meta', 10, 4 );
