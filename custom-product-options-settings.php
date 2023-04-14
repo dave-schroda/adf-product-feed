@@ -1,5 +1,17 @@
 <?php
 function custom_product_options_settings_page() {
+  // Register settings
+  register_setting(
+    'custom_product_options_settings_group',
+    'markup_percentage',
+    array(
+      'type' => 'string',
+      'sanitize_callback' => 'custom_product_options_sanitize_markup_percentage'
+    )
+  );
+
+  // Render the markup percentage field
+  $value = get_option( 'markup_percentage' );
   ?>
   <div class="wrap">
     <h1><?php esc_html_e( 'Custom Product Options Settings', 'custom-product-options' ); ?></h1>
@@ -12,7 +24,7 @@ function custom_product_options_settings_page() {
             <label for="markup_percentage"><?php esc_html_e( 'Markup Percentage', 'custom-product-options' ); ?></label>
           </th>
           <td>
-            <input type="number" name="markup_percentage" id="markup_percentage" value="<?php echo esc_attr( get_option( 'markup_percentage' ) ); ?>" class="regular-text" min="0" max="100" step="0.01">
+            <input type="number" name="markup_percentage" id="markup_percentage" value="<?php echo esc_attr( $value ); ?>" class="regular-text" min="0" max="100" step="0.01">
             <p class="description"><?php esc_html_e( 'Enter the markup percentage to add to the price of each product.', 'custom-product-options' ); ?></p>
           </td>
         </tr>
@@ -23,45 +35,13 @@ function custom_product_options_settings_page() {
   <?php
 }
 
-function custom_product_options_settings() {
-  add_submenu_page(
-    'woocommerce',
-    'Custom Product Options Settings',
-    'Custom Product Options',
-    'manage_options',
-    'custom-product-options-settings',
-    'custom_product_options_settings_page'
-  );
-
-  // Register settings
-  add_action('admin_init', 'custom_product_options_register_settings');
-}
-add_action('admin_menu', 'custom_product_options_settings');
-
-// Register settings
-function custom_product_options_register_settings() {
-  register_setting(
-    'custom_product_options_settings_group',
-    'markup_percentage',
-    array(
-      'type' => 'number',
-      'sanitize_callback' => function ($value) {
-        $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        return intval($value);
-      }
-    )
-  );
-}
-
-
-add_action( 'admin_init', 'custom_product_options_settings' );
-
-// Render the markup percentage field
-function custom_product_options_markup_percentage_field() {
-  $value = get_option( 'markup_percentage' );
-  ?>
-  <input type="number" name="markup_percentage" id="markup_percentage" value="<?php echo esc_attr( $value ); ?>" class="regular-text" min="0" max="100" step="0.01">
-  <?php
+function custom_product_options_sanitize_markup_percentage( $input ) {
+  $new_input = filter_var( $input, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+  if ( is_numeric( $new_input ) && $new_input >= 0 && $new_input <= 100 ) {
+    return $new_input;
+  } else {
+    return get_option( 'markup_percentage' );
+  }
 }
 
 // Define the markup percentage as a global variable
