@@ -3,13 +3,13 @@
  * Plugin Name: Custom Product Options
  * Description: A custom WordPress plugin to add product options and price calculations based on a JSON file.
  * Version: 1.0
- * Author: Your Name
- * Author URI: https://yourwebsite.com
+ * Author: David Schroeder
+ * Author URI: https://amishdirectfurniture.com
  */
 
 // Define the markup percentage as a global variable
 global $custom_markup_percentage;
-$custom_markup_percentage = get_option('adf_custom_markup_percentage');
+$custom_markup_percentage = get_option('custom_markup_percentage');
 
 // Add the settings menu
 function custom_product_options_add_settings_link($links) {
@@ -68,9 +68,34 @@ function custom_product_options_settings_page() {
 }
 
 function custom_product_options_get_option($option_name) {
+  global $wpdb, $custom_markup_percentage;
+
   $option_value = get_option($option_name);
-  return isset($option_value) ? $option_value : null;
+  
+  // Debug code: print option value to console
+  error_log("Option name: $option_name, option value: $option_value");
+
+  if (!$option_value) {
+    // If the option doesn't exist, create it with a default value
+    switch ($option_name) {
+      case 'markup_percentage':
+        if ($custom_markup_percentage) {
+          $option_value = $custom_markup_percentage;
+        } else {
+          $option_value = 1;
+        }
+        break;
+      default:
+        $option_value = '';
+        break;
+    }
+    add_option($option_name, $option_value);
+  }
+
+  return $option_value;
 }
+
+
 
 // Enqueue the JavaScript files
 function custom_product_options_enqueue_scripts() {
