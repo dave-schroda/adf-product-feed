@@ -18,7 +18,6 @@ jQuery(function ($) {
       console.log('customMarkupPercentage:', customJsData.customMarkupPercentage);
       const markupPercentage = parseFloat(customJsData.customMarkupPercentage);
 
-
       // Loop through the data and update the prices with the markup percentage
       const updatedData = data.map(item => {
         const updatedItem = {...item};
