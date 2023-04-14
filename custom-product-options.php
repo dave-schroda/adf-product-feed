@@ -9,7 +9,7 @@
 
 // Define the markup percentage as a global variable
 global $custom_markup_percentage;
-$custom_markup_percentage = get_option('custom_markup_percentage');
+$custom_markup_percentage = get_option('adf_custom_markup_percentage');
 
 // Add the settings menu
 function custom_product_options_add_settings_link($links) {
@@ -72,13 +72,16 @@ function custom_product_options_get_option($option_name) {
   return isset($option_value) ? $option_value : null;
 }
 
-// Enqueue the JavaScript file
+// Enqueue the JavaScript files
 function custom_product_options_enqueue_scripts() {
+  // Get the markup percentage from the options page
+  $custom_markup_percentage = custom_product_options_get_option('markup_percentage');
+
   $script_url = plugin_dir_url(__FILE__) . 'js/custom-product-options.js';
 
   wp_register_script('custom-product-options', $script_url, array('jquery'), '1.0', true);
 
-  // Add pluginUrl to the script data
+  // Add pluginUrl and markup percentage to the script data
   wp_localize_script('custom-product-options', 'customJsData', array(
     'wpContentUrl' => content_url(),
     'customMarkupPercentage' => $custom_markup_percentage,
@@ -88,6 +91,7 @@ function custom_product_options_enqueue_scripts() {
   wp_enqueue_script('custom-product-options');
 }
 add_action('wp_enqueue_scripts', 'custom_product_options_enqueue_scripts');
+
 
 function custom_product_options_add_menu_item() {
   add_submenu_page(
