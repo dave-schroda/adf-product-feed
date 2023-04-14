@@ -10,24 +10,23 @@ jQuery(function ($) {
   async function fetchCsvData(jsonFileUrl) {
     try {
       console.log('Fetching data from:', jsonFileUrl);
-      const response = await fetch(jsonFileUrl);
+      const response = await fetch(`${customJsData.pluginUrl}js/${jsonFileUrl}`);
       console.log('Response:', response);
       const data = await response.json();
-      console.log('Data:', data);
 
       // Get the markup percentage from the options page
       const markupPercentage = parseFloat(custom_product_options_get_option('markup_percentage'));
 
       // Loop through the data and update the prices with the markup percentage
       const updatedData = data.map(item => {
-      const updatedItem = {...item};
-      for (const key in updatedItem) {
-        if (key !== 'Size') {
-          updatedItem[key] = parseFloat(updatedItem[key]) * (1 + markupPercentage / 100);
+        const updatedItem = {...item};
+        for (const key in updatedItem) {
+          if (key !== 'Size') {
+            updatedItem[key] = parseFloat(updatedItem[key]) * (1 + markupPercentage / 100);
+          }
         }
-      }
-      return updatedItem;
-    });
+        return updatedItem;
+      });
 
       return updatedData;
     } catch (error) {
@@ -72,8 +71,8 @@ jQuery(function ($) {
 
   async function displayCsvOptions(csvFile, elementId) {
     console.log('Displaying CSV options for:', csvFile);
-    const data = await fetchCsvData(`${customJsData.pluginUrl}${csvFile}`);
-    console.log('CSV data:', data);
+    const data = await fetchCsvData(csvFile);
+    console.log('JSON data:', data);
 
     const woodOptions = Object.keys(data[0]).filter(key => key !== 'Size');
     const sizeOptions = Array.from(new Set(data.map(item => item.Size)));
@@ -116,17 +115,6 @@ jQuery(function ($) {
     const updatePriceWithScope = () => updatePrice(data);
     woodSelect.addEventListener('change', updatePriceWithScope);
     sizeSelect.addEventListener('change', updatePriceWithScope);
-  }
-
-  function init() {
-    const skuElement = document.querySelector('.sku');
-    if (skuElement) {
-      const sku = skuElement.textContent.trim();
-      console.log('Product SKU:', sku);
-      displayCsvOptions(`product-csv-files/${sku}.json`, 'custom-options');
-    } else {
-      console.error('SKU not found on the product page');
-    }
   }
 
   $(document).ready(init);
