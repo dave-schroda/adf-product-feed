@@ -39,7 +39,7 @@ jQuery(function ($) {
   function updatePrice(data) {
     const woodSelect = document.getElementById('woodSelect');
     const sizeSelect = document.getElementById('sizeSelect');
-    const originalPriceElement = document.querySelector('.price del .woocommerce-Price-amount');
+    const originalPriceElement = document.querySelector('#product-price');
 
     if (!woodSelect || !sizeSelect || !originalPriceElement) {
       return;
@@ -64,6 +64,32 @@ jQuery(function ($) {
         // Trigger a custom event to inform the plugin that the price has changed
         const priceChangeEvent = new CustomEvent('priceChange', { detail: { price: updatedPrice } });
         originalPriceElement.dispatchEvent(priceChangeEvent);
+
+        // Update the cart item data
+        const productId = parseInt(woodSelect.dataset.productId);
+        const cartItemKey = $('input[name="cart_item_key"]').val();
+        const quantity = parseInt($('input[name="quantity"]').val());
+        const ajaxUrl = '<?php echo admin_url( "admin-ajax.php" ); ?>';
+
+
+        $.ajax({
+          url: woocommerce_params.ajax_url,
+          type: 'POST',
+          data: {
+            action: 'update_cart_item_data',
+            product_id: productId,
+            cart_item_key: cartItemKey,
+            custom_price: updatedPrice.toFixed(2),
+            quantity: quantity
+          },
+          success: function (response) {
+            console.log('Cart item updated with new price:', updatedPrice);
+            console.log(response);
+          },
+          error: function (response) {
+            console.error('Error updating cart item data:', response);
+          }
+        });
       } else {
         originalPriceElement.innerHTML = 'Product not found.';
       }
