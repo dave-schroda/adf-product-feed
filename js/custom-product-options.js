@@ -10,7 +10,7 @@ jQuery(function ($) {
   async function fetchCsvData(jsonFileUrl) {
     try {
       console.log('Fetching data from:', jsonFileUrl);
-      const response = await fetch(`${customJsData.pluginUrl}js/${jsonFileUrl}`);
+      const response = await fetch(`${customJsData.pluginUrl}product-csv-files/${jsonFileUrl}`);
       console.log('Response:', response);
       const data = await response.json();
 
@@ -117,18 +117,17 @@ jQuery(function ($) {
     sizeSelect.addEventListener('change', updatePriceWithScope);
   }
 
-  $(document).ready(init);
-
-  // listen for the priceChange event to update the offer
-  const originalPriceElement = document.querySelector('.price del .woocommerce-Price-amount');
-  if (originalPriceElement) {
-    originalPriceElement.addEventListener('priceChange', (event) => {
-      const price = event.detail.price;
-      const offer = document.querySelector('.price ins .woocommerce-Price-amount');
-      if (offer) {
-        offer.innerHTML = `<span class="woocommerce-Price-currencySymbol">$</span>${price.toFixed(2)}`;
-      }
-    });
+  function init() {
+    const skuElement = document.querySelector('.sku');
+    if (skuElement) {
+      const sku = skuElement.textContent.trim();
+      console.log('Product SKU:', sku);
+      displayCsvOptions(`${sku}.json`, 'custom-options');
+    } else {
+      console.error('SKU not found on the product page');
+    }
   }
 
-})();
+  init(); // call the init function when the script is loaded
+
+});
