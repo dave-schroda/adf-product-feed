@@ -44,9 +44,10 @@ function custom_product_options_register_settings() {
     'custom_product_options_settings_group',
     'markup_percentage',
     array(
-      'type' => 'string',
+      'type' => 'number',
       'sanitize_callback' => function ($value) {
-        return filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        return intval($value);
       }
     )
   );
@@ -62,9 +63,10 @@ function custom_product_options_markup_percentage_field() {
   <input type="number" name="markup_percentage" id="markup_percentage" value="<?php echo esc_attr( $value ); ?>" class="regular-text" min="0" max="100" step="0.01">
   <?php
 }
+
 // Define the markup percentage as a global variable
 global $custom_markup_percentage;
-$custom_markup_percentage = get_option('custom_markup_percentage');
+$custom_markup_percentage = get_option('markup_percentage', 1);
 
 function custom_product_options_get_option($option_name) {
   global $custom_markup_percentage;
@@ -73,7 +75,7 @@ function custom_product_options_get_option($option_name) {
 
   if (!$option_value) {
     switch ($option_name) {
-      case 'custom_markup_percentage':
+      case 'markup_percentage':
         if ($custom_markup_percentage) {
           $option_value = $custom_markup_percentage;
         } else {
