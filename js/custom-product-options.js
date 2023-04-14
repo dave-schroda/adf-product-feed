@@ -7,20 +7,17 @@ jQuery(function ($) {
 
   let data; // Declare data as a global variable
 
-  async function fetchCsvData(jsonFileUrl) {
+  async function fetchJsonData(jsonFileUrl) {
     try {
-      const fileUrl = `${customJsData.pluginUrl}product-csv-files/${jsonFileUrl}`;
-      console.log('Fetching data from:', fileUrl);
-      const response = await fetch(fileUrl);
+      console.log('Fetching data from:', jsonFileUrl);
+      const response = await fetch(jsonFileUrl);
       console.log('Response:', response);
-      const csvData = await response.text();
-      
-      // Parse CSV data using PapaParse library
-      const parsedData = Papa.parse(csvData, { header: true });
-      const data = parsedData.data;
+      const data = await response.json();
 
       // Get the markup percentage from the options page
-      const markupPercentage = parseFloat(custom_product_options_get_option('markup_percentage'));
+      console.log('customMarkupPercentage:', customJsData.customMarkupPercentage);
+      const markupPercentage = parseFloat(customJsData.customMarkupPercentage);
+
 
       // Loop through the data and update the prices with the markup percentage
       const updatedData = data.map(item => {
@@ -35,7 +32,7 @@ jQuery(function ($) {
 
       return updatedData;
     } catch (error) {
-      console.error('Error fetching CSV data:', error);
+      console.error('Error fetching JSON data:', error);
       throw error;
     }
   }
@@ -76,7 +73,7 @@ jQuery(function ($) {
 
   async function displayCsvOptions(csvFile, elementId) {
     console.log('Displaying CSV options for:', csvFile);
-    const data = await fetchCsvData(csvFile);
+    const data = await fetchJsonData(`${customJsData.pluginUrl}${csvFile}`);
     console.log('JSON data:', data);
 
     const woodOptions = Object.keys(data[0]).filter(key => key !== 'Size');
@@ -127,7 +124,7 @@ jQuery(function ($) {
     if (skuElement) {
       const sku = skuElement.textContent.trim();
       console.log('Product SKU:', sku);
-      displayCsvOptions(`${sku}.json`, 'custom-options');
+      displayCsvOptions(`product-csv-files/${sku}.json`, 'custom-options');
     } else {
       console.error('SKU not found on the product page');
     }
