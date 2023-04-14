@@ -64,32 +64,6 @@ jQuery(function ($) {
         // Trigger a custom event to inform the plugin that the price has changed
         const priceChangeEvent = new CustomEvent('priceChange', { detail: { price: updatedPrice } });
         originalPriceElement.dispatchEvent(priceChangeEvent);
-
-        // Update the cart item data
-        const productId = parseInt(woodSelect.dataset.productId);
-        const cartItemKey = $('input[name="cart_item_key"]').val();
-        const quantity = parseInt($('input[name="quantity"]').val());
-
-        const customData = {
-          'Wood': selectedWood,
-          'Size': selectedSize,
-          'Price': updatedPrice.toFixed(2)
-        };
-
-        const data = {
-          action: 'custom_product_options_update_cart_item_data',
-          product_id: productId,
-          cart_item_key: cartItemKey,
-          quantity: quantity,
-          custom_data: customData
-        };
-
-        $.post(customJsData.wpAjaxUrl, data, function(response) {
-          console.log('Cart item data updated:', response);
-        }).fail(function(error) {
-          console.error('Error updating cart item data:', error);
-        });
-
       } else {
         originalPriceElement.innerHTML = 'Product not found.';
       }
@@ -146,26 +120,6 @@ jQuery(function ($) {
     sizeSelect.addEventListener('change', updatePriceWithScope);
   }
 
-  function woocommerce_ajax_add_to_cart() {
-    $(document.body).on('added_to_cart', function(event, fragments, cart_hash, $button) {
-      const cartItemKey = Object.keys(fragments)[0];
-      const cartItem = fragments[cartItemKey];
-      const newPrice = cartItem['custom_data']['price'];
-
-      const data = {
-        action: 'custom_product_options_update_cart_item_data',
-        cart_item_key: cartItemKey,
-        new_price: newPrice
-      };
-
-      $.post(customJsData.wpAjaxUrl, data, function(response) {
-        console.log('Cart item data updated:', response);
-      }).fail(function(error) {
-        console.error('Error updating cart item data:', error);
-      });
-    });
-  }
-  
   function init() {
     const skuElement = document.querySelector('.sku');
     if (skuElement) {
