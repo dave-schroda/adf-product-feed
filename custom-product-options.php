@@ -71,9 +71,6 @@ function custom_product_options_get_option($option_name) {
   global $wpdb, $custom_markup_percentage;
 
   $option_value = get_option($option_name);
-  
-  // Debug code: print option value to console
-  error_log("Option name: $option_name, option value: $option_value");
 
   if (!$option_value) {
     // If the option doesn't exist, create it with a default value
@@ -94,8 +91,6 @@ function custom_product_options_get_option($option_name) {
 
   return $option_value;
 }
-
-
 
 // Enqueue the JavaScript files
 function custom_product_options_enqueue_scripts() {
