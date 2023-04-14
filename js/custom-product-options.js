@@ -23,7 +23,7 @@ jQuery(function ($) {
         const updatedItem = {...item};
         for (const key in updatedItem) {
           if (key !== 'Size') {
-            updatedItem[key] = parseFloat(updatedItem[key]) * (1 + markupPercentage / 100);
+            updatedItem[key] = Math.ceil(parseFloat(updatedItem[key]) * (1 + markupPercentage / 100));
           }
         }
         return updatedItem;
