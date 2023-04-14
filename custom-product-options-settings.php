@@ -22,3 +22,47 @@ function custom_product_options_settings_page() {
   </div>
   <?php
 }
+
+function custom_product_options_settings_init() {
+  // Register a settings section
+  add_settings_section(
+    'custom_product_options_settings_section',
+    __( 'Custom Product Options Settings', 'custom-product-options' ),
+    '',
+    'custom_product_options_settings_group'
+  );
+
+  // Register a settings field
+  add_settings_field(
+    'markup_percentage',
+    __( 'Markup Percentage', 'custom-product-options' ),
+    'custom_product_options_markup_percentage_input_callback',
+    'custom_product_options_settings_group',
+    'custom_product_options_settings_section'
+  );
+
+  // Register the settings section and fields
+  register_setting(
+    'custom_product_options_settings_group',
+    'markup_percentage',
+    array(
+      'type' => 'number',
+      'sanitize_callback' => 'sanitize_text_field',
+      'default' => '0',
+    )
+  );
+}
+add_action( 'admin_init', 'custom_product_options_settings_init' );
+
+function custom_product_options_markup_percentage_input_callback() {
+  $value = get_option( 'markup_percentage' );
+  ?>
+  <input type="number" name="markup_percentage" id="markup_percentage" value="<?php echo esc_attr( $value ); ?>" class="regular-text" min="0" max="100" step="0.01">
+  <?php
+}
+
+// Save the submitted form
+if (isset($_POST['markup_percentage'])) {
+  update_option('markup_percentage', $_POST['markup_percentage']);
+  echo '<div class="notice notice-success"><p>Markup percentage saved.</p></div>';
+}
