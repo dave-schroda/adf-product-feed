@@ -5,7 +5,7 @@ jQuery(function ($) {
   function adfUpdateProductOptions(product_id, options, final_price) {
     jQuery.ajax({
       type: 'POST',
-      url: adf_product_feed_params.ajax_url,
+      url: customJsData.ajaxUrl,
       data: {
         action: 'adf_update_product_options',
         product_id: product_id,
