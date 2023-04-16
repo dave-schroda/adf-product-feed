@@ -1,25 +1,38 @@
 jQuery(function ($) {
   console.log('Script is running');
 
-  // Add this function in custom-product-options.js
-  function adfUpdateProductOptions(product_id, options, final_price) {
-    jQuery.ajax({
-      type: 'POST',
-      url: customJsData.ajaxUrl,
-      data: {
-        action: 'adf_update_product_options',
-        product_id: product_id,
-        options: options,
-        final_price: final_price,
-      },
-      success: function (response) {
-        if (response.success) {
-          console.log('Product options updated successfully');
-        } else {
-          console.error('Error updating product options:', response.data);
-        }
-      },
-    });
+  // AJAX to send options/final price to server
+  async function adfUpdateProductOptions(productId, options, finalPrice) {
+    const ajaxUrl = customJsData.ajax_url;
+
+    try {
+      const response = await fetch(ajaxUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          action: 'adf_update_product_options',
+          product_id: productId,
+          options: JSON.stringify(options),
+          final_price: finalPrice,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const jsonResponse = await response.json();
+
+      if (jsonResponse.success === false) {
+        throw new Error(jsonResponse.data);
+      }
+
+      console.log('Product options updated successfully');
+    } catch (error) {
+      console.error('Error updating product options:', error);
+    }
   }
 
   function custom_product_options_get_option(option_name) {
@@ -136,7 +149,7 @@ jQuery(function ($) {
     container.appendChild(woodSelect);
     container.appendChild(sizeSelect);
 
-    const updatePriceAndOptionsWithScope = () => {
+    const updatePriceAndOptionsWithScope = async () => {
       const finalPrice = updatePrice(data);
       const selectedOptions = {
         wood: woodSelect.value,
@@ -144,11 +157,16 @@ jQuery(function ($) {
       };
       // Update product options on the server-side when the user selects an option
       if (selectedOptions.wood !== 'Select Wood' && selectedOptions.size !== 'Select Size') {
-        adfUpdateProductOptions(customJsData.productId, selectedOptions, finalPrice);
+        try {
+          await adfUpdateProductOptions(customJsData.productId, selectedOptions, finalPrice);
+        } catch (error) {
+          console.error(`Error updating product options: ${error}`);
+        }
+        updatePriceDisplay();
+        jQuery(document.body).trigger('wc_fragment_refresh'); // Add this line
       }
     };
 
-    // Replace the previous event listeners with these lines:
     woodSelect.addEventListener('change', updatePriceAndOptionsWithScope);
     sizeSelect.addEventListener('change', updatePriceAndOptionsWithScope);
   }
