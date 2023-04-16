@@ -1,6 +1,27 @@
 jQuery(function ($) {
   console.log('Script is running');
 
+  // Add this function in custom-product-options.js
+  function adfUpdateProductOptions(product_id, options, final_price) {
+    jQuery.ajax({
+      type: 'POST',
+      url: adf_product_feed_params.ajax_url,
+      data: {
+        action: 'adf_update_product_options',
+        product_id: product_id,
+        options: options,
+        final_price: final_price,
+      },
+      success: function (response) {
+        if (response.success) {
+          console.log('Product options updated successfully');
+        } else {
+          console.error('Error updating product options:', response.data);
+        }
+      },
+    });
+  }
+
   function custom_product_options_get_option(option_name) {
     return customJsData[option_name];
   }
@@ -116,6 +137,20 @@ jQuery(function ($) {
     container.appendChild(sizeSelect);
 
     const updatePriceWithScope = () => updatePrice(data);
+    woodSelect.addEventListener('change', updatePriceWithScope);
+    sizeSelect.addEventListener('change', updatePriceWithScope);
+
+    const updatePriceWithScope = () => {
+      const finalPrice = updatePrice(data);
+      const selectedOptions = {
+        wood: woodSelect.value,
+        size: sizeSelect.value,
+      };
+      // Update product options on the server-side when the user selects an option
+      if (selectedOptions.wood !== 'Select Wood' && selectedOptions.size !== 'Select Size') {
+        adfUpdateProductOptions(customJsData.productId, selectedOptions, finalPrice);
+      }
+    };
     woodSelect.addEventListener('change', updatePriceWithScope);
     sizeSelect.addEventListener('change', updatePriceWithScope);
   }
