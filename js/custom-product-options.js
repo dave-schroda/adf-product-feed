@@ -162,7 +162,6 @@ jQuery(function ($) {
         } catch (error) {
           console.error(`Error updating product options: ${error}`);
         }
-        updatePriceDisplay();
         jQuery(document.body).trigger('wc_fragment_refresh'); // Add this line
       }
     };
