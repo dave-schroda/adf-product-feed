@@ -24,15 +24,27 @@ class ADF_Product_Feed_Ajax {
 
         // Update cart item
         $cart = WC()->cart;
-        $cart_item_key = $cart->find_product_in_cart($product_id);
+        $cart_item_key = $this->find_product_in_cart($cart, $product_id);
         if ($cart_item_key) {
             $cart_item = $cart->get_cart_item($cart_item_key);
             $cart_item['options'] = $sanitized_options;
-            $cart_item['data']->set_price($_POST['final_price']);
+            $cart_item['data']->set_price(floatval($_POST['final_price']));
+            $cart->cart_contents[$cart_item_key] = $cart_item;
             $cart->set_session();
+            $cart->calculate_totals(); // Add this line
         }
 
         wp_send_json_success('Options updated successfully');
+    }
+
+    // Add this function to class-adf-product-feed-ajax.php
+    private function find_product_in_cart($cart, $product_id) {
+        foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
+            if ($cart_item['product_id'] == $product_id) {
+                return $cart_item_key;
+            }
+        }
+        return false;
     }
 
     public function display_options_in_cart($item_data, $cart_item) {
