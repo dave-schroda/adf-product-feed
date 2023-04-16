@@ -136,11 +136,11 @@ jQuery(function ($) {
     container.appendChild(woodSelect);
     container.appendChild(sizeSelect);
 
-    const updatePriceWithScope = () => updatePrice(data);
+    // const updatePriceWithScope = () => updatePrice(data);
     woodSelect.addEventListener('change', updatePriceWithScope);
     sizeSelect.addEventListener('change', updatePriceWithScope);
 
-    const updatePriceWithScope = () => {
+    const updatePriceAndOptionsWithScope = () => {
       const finalPrice = updatePrice(data);
       const selectedOptions = {
         wood: woodSelect.value,
@@ -151,8 +151,10 @@ jQuery(function ($) {
         adfUpdateProductOptions(customJsData.productId, selectedOptions, finalPrice);
       }
     };
-    woodSelect.addEventListener('change', updatePriceWithScope);
-    sizeSelect.addEventListener('change', updatePriceWithScope);
+
+    // Replace the previous event listeners with these lines:
+    woodSelect.addEventListener('change', updatePriceAndOptionsWithScope);
+    sizeSelect.addEventListener('change', updatePriceAndOptionsWithScope);
   }
 
   function init() {
