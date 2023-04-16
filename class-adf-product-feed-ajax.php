@@ -28,20 +28,19 @@ class ADF_Product_Feed_Ajax {
         $cart_item_key = $this->find_product_in_cart($cart, $product_id);
         if ($cart_item_key) {
             $cart_item = $cart->get_cart_item($cart_item_key);
-            $cart_item['options'] = $sanitized_options;
             $cart_item['data']->set_price(floatval($_POST['final_price']));
-            $cart->cart_contents[$cart_item_key] = $cart_item;
-            $cart->set_session();
-            $cart->calculate_totals();
         } else {
             $cart_item_data = array(
-                'options' => $sanitized_options,
                 'final_price' => floatval($_POST['final_price']),
             );
-            $cart->add_to_cart($product_id, 1, 0, array(), $cart_item_data);
-            $cart->set_session();
-            $cart->calculate_totals();
+            $cart_item_key = $cart->add_to_cart($product_id, 1, 0, array(), $cart_item_data);
+            $cart_item = $cart->get_cart_item($cart_item_key);
         }
+
+        // Add selected options to cart item
+        $cart_item['adf_options'] = $sanitized_options;
+        $cart->set_session();
+        $cart->calculate_totals();
 
         wp_send_json_success('Options updated successfully');
     }
@@ -57,8 +56,8 @@ class ADF_Product_Feed_Ajax {
     }
 
     public function display_options_in_cart($item_data, $cart_item) {
-        if (isset($cart_item['options'])) {
-            foreach ($cart_item['options'] as $key => $value) {
+        if (isset($cart_item['adf_options'])) {
+            foreach ($cart_item['adf_options'] as $key => $value) {
                 $item_data[] = array(
                     'key'     => ucfirst($key),
                     'value'   => $value,
@@ -69,6 +68,7 @@ class ADF_Product_Feed_Ajax {
         return $item_data;
     }
 
+
     public function add_options_to_order_items($item, $cart_item_key, $values, $order) {
         if (isset($values['options'])) {
             foreach ($values['options'] as $key => $value) {
@@ -76,18 +76,19 @@ class ADF_Product_Feed_Ajax {
             }
         }
     }
+
     public function set_cart_item_prices($cart_obj) {
         if (is_admin() && !defined('DOING_AJAX')) {
-            return;
+          return;
         }
 
         foreach ($cart_obj->get_cart() as $cart_item) {
-            if (isset($cart_item['final_price'])) {
-                $cart_item['data']->set_price($cart_item['final_price']);
-            }
+          if (isset($cart_item['final_price'])) {
+            $cart_item['data']->set_price($cart_item['final_price']);
+          }
         }
     }
-
+    
 }
 
 new ADF_Product_Feed_Ajax();
