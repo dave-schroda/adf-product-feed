@@ -136,10 +136,6 @@ jQuery(function ($) {
     container.appendChild(woodSelect);
     container.appendChild(sizeSelect);
 
-    // const updatePriceWithScope = () => updatePrice(data);
-    woodSelect.addEventListener('change', updatePriceWithScope);
-    sizeSelect.addEventListener('change', updatePriceWithScope);
-
     const updatePriceAndOptionsWithScope = () => {
       const finalPrice = updatePrice(data);
       const selectedOptions = {
