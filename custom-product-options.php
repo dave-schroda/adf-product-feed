@@ -21,11 +21,12 @@ function custom_product_options_enqueue_scripts() {
 
   wp_register_script('custom-product-options', $script_url, array('jquery'), '1.0', true);
 
-  // Add pluginUrl and markup percentage to the script data
+  // Add pluginUrl, markup percentage, and ajax_url to the script data
   wp_localize_script('custom-product-options', 'customJsData', array(
-    'wpContentUrl' => content_url(),
-    'customMarkupPercentage' => $custom_markup_percentage,
-    'pluginUrl' => plugin_dir_url(__FILE__)
+      'wpContentUrl' => content_url(),
+      'customMarkupPercentage' => $custom_markup_percentage,
+      'pluginUrl' => plugin_dir_url(__FILE__),
+      'ajax_url' => admin_url('admin-ajax.php') // Add this line
   ));
 
   wp_enqueue_script('custom-product-options');
