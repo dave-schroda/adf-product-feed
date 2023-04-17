@@ -9,6 +9,22 @@ class ADF_Product_Feed_Ajax {
         add_action('woocommerce_before_calculate_totals', array($this, 'set_cart_item_prices'), 10, 1);
     }
 
+    public function get_product_options($product) {
+        // Assuming $product is an instance of WC_Product
+        $sku = $product->get_sku();
+        $json_url = plugin_dir_path( __FILE__ ) . 'product-csv-files/' . $sku . '.json';
+
+        if ( file_exists( $json_url ) ) {
+            $json_data = file_get_contents( $json_url );
+            // Process the JSON data as needed
+            $product_options = json_decode($json_data, true);
+        } else {
+            // Handle the case where the JSON file doesn't exist
+            $product_options = array();
+        }
+        return $product_options;
+    }
+
     public function adf_update_product_options() {
         if (!isset($_POST['product_id']) || !isset($_POST['options'])) {
             wp_send_json_error('Invalid request');
@@ -17,10 +33,14 @@ class ADF_Product_Feed_Ajax {
         $product_id = intval($_POST['product_id']);
         $options = $_POST['options'];
 
-        // Validate and sanitize input data
-        $sanitized_options = array();
-        foreach ($options as $key => $value) {
-            $sanitized_options[sanitize_text_field($key)] = sanitize_text_field($value);
+        // Retrieve product options and price from JSON file
+        $product_options = $this->get_product_options($product_id);
+        $final_price = $product_options['price'];
+
+        foreach ($options as $option_key => $option_value) {
+            if (isset($product_options['options'][$option_key][$option_value])) {
+                $final_price += $product_options['options'][$option_key][$option_value];
+            }
         }
 
         // Update cart item
@@ -28,17 +48,17 @@ class ADF_Product_Feed_Ajax {
         $cart_item_key = $this->find_product_in_cart($cart, $product_id);
         if ($cart_item_key) {
             $cart_item = $cart->get_cart_item($cart_item_key);
-            $cart_item['data']->set_price(floatval($_POST['final_price']));
+            $cart_item['data']->set_price(floatval($final_price));
         } else {
             $cart_item_data = array(
-                'final_price' => floatval($_POST['final_price']),
+                'final_price' => floatval($final_price),
             );
             $cart_item_key = $cart->add_to_cart($product_id, 1, 0, array(), $cart_item_data);
             $cart_item = $cart->get_cart_item($cart_item_key);
         }
 
         // Add selected options to cart item
-        $cart_item['adf_options'] = $sanitized_options;
+        $cart_item['adf_options'] = $options;
         $cart->set_session();
         $cart->calculate_totals();
 
@@ -68,7 +88,6 @@ class ADF_Product_Feed_Ajax {
         return $item_data;
     }
 
-
     public function add_options_to_order_items($item, $cart_item_key, $values, $order) {
         if (isset($values['options'])) {
             foreach ($values['options'] as $key => $value) {
@@ -79,16 +98,16 @@ class ADF_Product_Feed_Ajax {
 
     public function set_cart_item_prices($cart_obj) {
         if (is_admin() && !defined('DOING_AJAX')) {
-          return;
+            return;
         }
 
-        foreach ($cart_obj->get_cart() as $cart_item) {
-          if (isset($cart_item['final_price'])) {
-            $cart_item['data']->set_price($cart_item['final_price']);
-          }
+        foreach ($cart_obj->get_cart() as $cart_item_key => $cart_item) {
+            if (isset($cart_item['final_price'])) {
+                $cart_item['data']->set_price($cart_item['final_price']);
+            }
         }
     }
-    
+
 }
 
 new ADF_Product_Feed_Ajax();
