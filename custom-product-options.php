@@ -39,7 +39,28 @@ if (!class_exists('Custom_Product_Options')) {
         {
             global $product;
             $sku = $product->get_sku();
-            $json_file_path = plugin_dir_path(__FILE__) . 'product-csv-files/' . $sku . '.json';
+
+            // Map SKU prefixes to manufacturer folder names
+            $manufacturer_folders = array(
+                'IH' => 'interior-hardwoods',
+                'WP' => 'west-point-woodworking',
+                // Add more manufacturer folder mappings here as needed
+            );
+
+            $manufacturer_folder = '';
+            foreach ($manufacturer_folders as $prefix => $folder) {
+                if (strpos($sku, $prefix) === 0) {
+                    $manufacturer_folder = $folder;
+                    break;
+                }
+            }
+
+            // If a matching folder is not found, return early
+            if ($manufacturer_folder === '') {
+                return;
+            }
+
+            $json_file_path = plugin_dir_path(__FILE__) . 'product-csv-files/' . $manufacturer_folder . '/' . $sku . '.json';
 
             // Display the JSON file path on the product page
             echo '<!-- JSON file path: ' . htmlspecialchars($json_file_path) . ' -->';
@@ -134,20 +155,28 @@ if (!class_exists('Custom_Product_Options')) {
 
             return $item_data;
         }
-
+        
         public function custom_product_options_update_cart_item_price( $cart_object ) {
+            $markup_percentage = get_option('markup_percentage', 100);
+            $markup_multiplier = $markup_percentage / 100;
+
             if ( !WC()->session->__isset( 'reload_checkout' ) ) {
                 foreach ( $cart_object->get_cart() as $cart_item_key => $cart_item ) {
                     if ( isset( $cart_item['custom_options']['selected_price'] ) && !empty( $cart_item['custom_options']['selected_price'] ) ) {
-                        $price = $cart_item['custom_options']['selected_price'];
+                        $price = $cart_item['custom_options']['selected_price'] * $markup_multiplier;
                         $cart_item['data']->set_price( (float) $price );
                     }
                 }
             }
         }
 
-
     }
 
     new Custom_Product_Options();
+
+    // Include the settings file
+    require_once plugin_dir_path(__FILE__) . 'custom-product-options-settings.php';
+
+    // Register the settings page
+    add_action('admin_menu', 'custom_product_options_create_settings_page');
 }
