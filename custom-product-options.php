@@ -78,6 +78,7 @@ if (!class_exists('Custom_Product_Options')) {
                     echo '<input type="hidden" id="selected-price" name="selected_price" value="0">';
                     echo '<p class="price-message">See price after choosing your options</p>';
                     echo '<style> p.price { display: none; } </style>';
+                    echo '<script>var markup_percentage = ' . get_option('markup_percentage', 100) . ';</script>';
 
                     // Wood select box
                     echo '<div class="custom-option">';
@@ -155,20 +156,18 @@ if (!class_exists('Custom_Product_Options')) {
 
             return $item_data;
         }
-        
-        public function custom_product_options_update_cart_item_price( $cart_object ) {
-            $markup_percentage = get_option('markup_percentage', 100);
-            $markup_multiplier = $markup_percentage / 100;
 
+        public function custom_product_options_update_cart_item_price( $cart_object ) {
             if ( !WC()->session->__isset( 'reload_checkout' ) ) {
                 foreach ( $cart_object->get_cart() as $cart_item_key => $cart_item ) {
                     if ( isset( $cart_item['custom_options']['selected_price'] ) && !empty( $cart_item['custom_options']['selected_price'] ) ) {
-                        $price = $cart_item['custom_options']['selected_price'] * $markup_multiplier;
+                        $price = $cart_item['custom_options']['selected_price'];
                         $cart_item['data']->set_price( (float) $price );
                     }
                 }
             }
         }
+
 
     }
 
