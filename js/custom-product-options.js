@@ -5,6 +5,9 @@ jQuery(document).ready(function ($) {
     var priceText = priceElement.text();
     var priceMatch = priceText.match(/(\d+(?:\.\d+)?)/);
     var originalPrice = priceMatch ? parseFloat(priceMatch[0]) : 0;
+    
+    // Declare a variable to store the selected price at the beginning of the script
+    var selectedPrice = 0;
 
     function updateProductPrice() {
         var woodSelect = $('#wood');
@@ -12,9 +15,12 @@ jQuery(document).ready(function ($) {
         var selectedSizeOption = sizeSelect.find('option:selected');
         var woodPrices = selectedSizeOption.data('prices') || {};
         var selectedWoodPrice = parseFloat(woodPrices[woodSelect.val()]) || 0;
-        var totalPrice = originalPrice + selectedWoodPrice;
+        selectedPrice = originalPrice + selectedWoodPrice; // Update the selectedPrice variable
 
-        priceElement.text('$' + totalPrice.toFixed(2));
+        // Apply the markup percentage
+        selectedPrice = selectedPrice * (markup_percentage / 100);
+
+        priceElement.text('$' + selectedPrice.toFixed(2));
     }
 
     function checkOptionsSelected() {
@@ -57,6 +63,10 @@ jQuery(document).ready(function ($) {
         $('<input />').attr('type', 'hidden')
             .attr('name', 'custom_option_size')
             .attr('value', $('#size').val())
+            .appendTo('form.cart');
+        $('<input />').attr('type', 'hidden')
+            .attr('name', 'selected_price') // Set the name attribute to 'selected_price'
+            .attr('value', selectedPrice) // Set the value attribute to the selectedPrice variable
             .appendTo('form.cart');
     });
 
