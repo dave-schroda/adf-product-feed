@@ -78,7 +78,6 @@ if (!class_exists('Custom_Product_Options')) {
                     echo '<input type="hidden" id="selected-price" name="selected_price" value="0">';
                     echo '<p class="price-message">See price after choosing your options</p>';
                     echo '<style> p.price { display: none; } </style>';
-                    echo '<script>var markup_percentage = ' . get_option('markup_percentage', 100) . ';</script>';
 
                     // Wood select box
                     echo '<div class="custom-option">';
@@ -120,6 +119,12 @@ if (!class_exists('Custom_Product_Options')) {
         public function enqueue_scripts()
         {
             wp_enqueue_script('custom-product-options-script', plugin_dir_url(__FILE__) . 'js/custom-product-options.js', array('jquery'), '1.0.0', true);
+
+            // Pass the markup_percentage to the JavaScript script
+            $markup_percentage = get_option('markup_percentage', 100);
+            wp_localize_script('custom-product-options-script', 'customProductOptionsData', array(
+                'markup_percentage' => $markup_percentage,
+            ));
         }
 
         public function woocommerce_missing_notice()
