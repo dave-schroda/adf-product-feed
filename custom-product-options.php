@@ -29,6 +29,7 @@ if (!class_exists('Custom_Product_Options')) {
                 add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
                 add_filter('woocommerce_add_cart_item_data', array($this, 'add_custom_options_to_cart_item_data'), 10, 3);
                 add_filter('woocommerce_get_item_data', array($this, 'display_custom_options_in_cart'), 10, 2);
+                add_action( 'woocommerce_before_calculate_totals', array( $this, 'custom_product_options_update_cart_item_price' ));
             } else {
                 add_action('admin_notices', array($this, 'woocommerce_missing_notice'));
             }
@@ -53,6 +54,7 @@ if (!class_exists('Custom_Product_Options')) {
                 if ($json_data) {
                     echo '<!-- Generating select boxes -->';
                     echo '<div class="custom-product-options">';
+                    echo '<input type="hidden" id="selected-price" name="selected_price" value="0">';
                     echo '<p class="price-message">See price after choosing your options</p>';
                     echo '<style> p.price { display: none; } </style>';
 
@@ -105,9 +107,11 @@ if (!class_exists('Custom_Product_Options')) {
 
         public function add_custom_options_to_cart_item_data($cart_item_data, $product_id, $variation_id) {
             if (isset($_POST['custom_option_wood']) && isset($_POST['custom_option_size'])) {
+                $selected_price = isset($_POST['selected_price']) ? floatval($_POST['selected_price']) : 0;
                 $cart_item_data['custom_options'] = array(
                     'wood' => sanitize_text_field($_POST['custom_option_wood']),
                     'size' => sanitize_text_field($_POST['custom_option_size']),
+                    'selected_price' => $selected_price, // Add this line
                 );
             }
 
@@ -130,6 +134,18 @@ if (!class_exists('Custom_Product_Options')) {
 
             return $item_data;
         }
+
+        public function custom_product_options_update_cart_item_price( $cart_object ) {
+            if ( !WC()->session->__isset( 'reload_checkout' ) ) {
+                foreach ( $cart_object->get_cart() as $cart_item_key => $cart_item ) {
+                    if ( isset( $cart_item['custom_options']['selected_price'] ) && !empty( $cart_item['custom_options']['selected_price'] ) ) {
+                        $price = $cart_item['custom_options']['selected_price'];
+                        $cart_item['data']->set_price( (float) $price );
+                    }
+                }
+            }
+        }
+
 
     }
 
