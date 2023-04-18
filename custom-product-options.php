@@ -29,7 +29,7 @@ if (!class_exists('Custom_Product_Options')) {
                 add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
                 add_filter('woocommerce_add_cart_item_data', array($this, 'add_custom_options_to_cart_item_data'), 10, 3);
                 add_filter('woocommerce_get_item_data', array($this, 'display_custom_options_in_cart'), 10, 2);
-                add_action('woocommerce_before_calculate_totals', array($this, 'adjust_cart_item_price'), 10, 1);
+                add_filter('woocommerce_add_cart_item_data', array($this, 'add_cart_item_data'), 10, 2);
 
             } else {
                 add_action('admin_notices', array($this, 'woocommerce_missing_notice'));
@@ -130,46 +130,24 @@ if (!class_exists('Custom_Product_Options')) {
 
             return $item_data;
         }
-        
-        public function adjust_cart_item_price($cart_object) {
-            if (!WC()->session->__isset('reload_checkout')) {
-                foreach ($cart_object->cart_contents as $key => $value) {
-                    if (isset($value['custom_options'])) {
-                        $product_id = $value['product_id'];
-                        $sku = get_post_meta($product_id, '_sku', true);
-                        $json_file_path = plugin_dir_path(__FILE__) . 'product-csv-files/' . $sku . '.json';
 
-                        if (file_exists($json_file_path)) {
-                            $json_data = json_decode(file_get_contents($json_file_path), true);
-                            $selected_wood = $value['custom_options']['wood'];
-                            $selected_size = $value['custom_options']['size'];
-                            $wood_price = 0;
-                            $size_price = 0;
+        public function add_cart_item_data($cart_item_data, $product_id)
+        {
+            if (isset($_POST['wood']) && isset($_POST['size'])) {
+                $wood = sanitize_text_field($_POST['wood']);
+                $size = sanitize_text_field($_POST['size']);
+                $sku = get_post_meta($product_id, '_sku', true);
+                $json_file_path = plugin_dir_path(__FILE__) . 'product-csv-files/' . $sku . '.json';
 
-                            foreach ($json_data['wood'] as $wood) {
-                                if ($wood['type'] == $selected_wood) {
-                                    $wood_price = $wood['price'];
-                                    break;
-                                }
-                            }
-
-                            foreach ($json_data['size'] as $size) {
-                                if ($size['length'] == $selected_size) {
-                                    foreach ($size['wood_prices'] as $wood_price_data) {
-                                        if ($wood_price_data['type'] == $selected_wood) {
-                                            $size_price = $wood_price_data['price'];
-                                            break;
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-
-                            $value['data']->set_price($wood_price + $size_price);
-                        }
+                if (file_exists($json_file_path)) {
+                    $json_data = json_decode(file_get_contents($json_file_path), true);
+                    if ($json_data && isset($json_data['size'][$size]) && isset($json_data['size'][$size][$wood])) {
+                        $price = $json_data['size'][$size][$wood];
+                        $cart_item_data['custom_price'] = $price;
                     }
                 }
             }
+            return $cart_item_data;
         }
 
     }
