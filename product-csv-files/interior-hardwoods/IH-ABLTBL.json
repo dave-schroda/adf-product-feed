@@ -1,0 +1,306 @@
+[
+ {
+   "Size": "36 x 48 Solid Top",
+   "Red Oak": 733,
+   "Cherry": 857,
+   "Brown Maple": 874,
+   "Quartersawn White Oak": 1011,
+   "Hard Maple": 1029
+ },
+ {
+   "Size": "36 x 48 1-12\" Leaf",
+   "Red Oak": 837,
+   "Cherry": 978,
+   "Brown Maple": 998,
+   "Quartersawn White Oak": 1154,
+   "Hard Maple": 1174
+ },
+ {
+   "Size": "36 x 48 2-12\" Leaves",
+   "Red Oak": 899,
+   "Cherry": 1049,
+   "Brown Maple": 1072,
+   "Quartersawn White Oak": 1237,
+   "Hard Maple": 1259
+ },
+ {
+   "Size": "36 x 48 3-12\" Leaves",
+   "Red Oak": 961,
+   "Cherry": 1120,
+   "Brown Maple": 1145,
+   "Quartersawn White Oak": 1319,
+   "Hard Maple": 1344
+ },
+ {
+   "Size": "36 x 54 Solid Top",
+   "Red Oak": 747,
+   "Cherry": 874,
+   "Brown Maple": 891,
+   "Quartersawn White Oak": 1031,
+   "Hard Maple": 1049
+ },
+ {
+   "Size": "36 x 54 1-12\" Leaf",
+   "Red Oak": 851,
+   "Cherry": 995,
+   "Brown Maple": 1015,
+   "Quartersawn White Oak": 1175,
+   "Hard Maple": 1195
+ },
+ {
+   "Size": "36 x 54 2-12\" Leaves",
+   "Red Oak": 913,
+   "Cherry": 1066,
+   "Brown Maple": 1089,
+   "Quartersawn White Oak": 1257,
+   "Hard Maple": 1279
+ },
+ {
+   "Size": "36 x 54 3-12\" Leaves",
+   "Red Oak": 975,
+   "Cherry": 1137,
+   "Brown Maple": 1162,
+   "Quartersawn White Oak": 1339,
+   "Hard Maple": 1364
+ },
+ {
+   "Size": "42 x 60 Solid Top",
+   "Red Oak": 884,
+   "Cherry": 1033,
+   "Brown Maple": 1054,
+   "Quartersawn White Oak": 1219,
+   "Hard Maple": 1240
+ },
+ {
+   "Size": "42 x 60 1-12\" Leaf",
+   "Red Oak": 999,
+   "Cherry": 1168,
+   "Brown Maple": 1191,
+   "Quartersawn White Oak": 1378,
+   "Hard Maple": 1402
+ },
+ {
+   "Size": "42 x 60 2-12\" Leaves",
+   "Red Oak": 1066,
+   "Cherry": 1245,
+   "Brown Maple": 1271,
+   "Quartersawn White Oak": 1467,
+   "Hard Maple": 1494
+ },
+ {
+   "Size": "42 x 60 3-12\" Leaves",
+   "Red Oak": 1133,
+   "Cherry": 1322,
+   "Brown Maple": 1350,
+   "Quartersawn White Oak": 1557,
+   "Hard Maple": 1586
+ },
+ {
+   "Size": "42 x 60 4-12\" Leaves",
+   "Red Oak": 1216,
+   "Cherry": 1418,
+   "Brown Maple": 1439,
+   "Quartersawn White Oak": 1670,
+   "Hard Maple": 1691
+ },
+ {
+   "Size": "42 x 66 Solid Top",
+   "Red Oak": 919,
+   "Cherry": 1071,
+   "Brown Maple": 1095,
+   "Quartersawn White Oak": 1261,
+   "Hard Maple": 1285
+ },
+ {
+   "Size": "42 x 66 1-12\" Leaf",
+   "Red Oak": 1035,
+   "Cherry": 1207,
+   "Brown Maple": 1234,
+   "Quartersawn White Oak": 1422,
+   "Hard Maple": 1448
+ },
+ {
+   "Size": "42 x 66 2-12\" Leaves",
+   "Red Oak": 1102,
+   "Cherry": 1284,
+   "Brown Maple": 1313,
+   "Quartersawn White Oak": 1511,
+   "Hard Maple": 1540
+ },
+ {
+   "Size": "42 x 66 3-12\" Leaves",
+   "Red Oak": 1168,
+   "Cherry": 1360,
+   "Brown Maple": 1392,
+   "Quartersawn White Oak": 1599,
+   "Hard Maple": 1631
+ },
+ {
+   "Size": "42 x 66 4-12\" Leaves",
+   "Red Oak": 1251,
+   "Cherry": 1456,
+   "Brown Maple": 1480,
+   "Quartersawn White Oak": 1712,
+   "Hard Maple": 1736
+ },
+ {
+   "Size": "42 x 72 Solid Top",
+   "Red Oak": 936,
+   "Cherry": 1092,
+   "Brown Maple": 1116,
+   "Quartersawn White Oak": 1286,
+   "Hard Maple": 1310
+ },
+ {
+   "Size": "42 x 72 1-12\" Leaf",
+   "Red Oak": 1052,
+   "Cherry": 1227,
+   "Brown Maple": 1254,
+   "Quartersawn White Oak": 1446,
+   "Hard Maple": 1473
+ },
+ {
+   "Size": "42 x 72 2-12\" Leaves",
+   "Red Oak": 1118,
+   "Cherry": 1303,
+   "Brown Maple": 1332,
+   "Quartersawn White Oak": 1534,
+   "Hard Maple": 1563
+ },
+ {
+   "Size": "42 x 72 3-12\" Leaves",
+   "Red Oak": 1185,
+   "Cherry": 1380,
+   "Brown Maple": 1412,
+   "Quartersawn White Oak": 1624,
+   "Hard Maple": 1655
+ },
+ {
+   "Size": "42 x 72 4-12\" Leaves",
+   "Red Oak": 1267,
+   "Cherry": 1475,
+   "Brown Maple": 1499,
+   "Quartersawn White Oak": 1735,
+   "Hard Maple": 1759
+ },
+ {
+   "Size": "48 x 60 Solid Top",
+   "Red Oak": 907,
+   "Cherry": 1069,
+   "Brown Maple": 1091,
+   "Quartersawn White Oak": 1260,
+   "Hard Maple": 1283
+ },
+ {
+   "Size": "48 x 60 1-12\" Leaf",
+   "Red Oak": 1035,
+   "Cherry": 1209,
+   "Brown Maple": 1234,
+   "Quartersawn White Oak": 1427,
+   "Hard Maple": 1451
+ },
+ {
+   "Size": "48 x 60 2-12\" Leaves",
+   "Red Oak": 1106,
+   "Cherry": 1291,
+   "Brown Maple": 1319,
+   "Quartersawn White Oak": 1522,
+   "Hard Maple": 1549
+ },
+ {
+   "Size": "48 x 60 3-12\" Leaves",
+   "Red Oak": 1177,
+   "Cherry": 1373,
+   "Brown Maple": 1403,
+   "Quartersawn White Oak": 1617,
+   "Hard Maple": 1647
+ },
+ {
+   "Size": "48 x 60 4-12\" Leaves",
+   "Red Oak": 1265,
+   "Cherry": 1475,
+   "Brown Maple": 1497,
+   "Quartersawn White Oak": 1737,
+   "Hard Maple": 1759
+ },
+ {
+   "Size": "48 x 66 Solid Top",
+   "Red Oak": 926,
+   "Cherry": 1091,
+   "Brown Maple": 1114,
+   "Quartersawn White Oak": 1288,
+   "Hard Maple": 1310
+ },
+ {
+   "Size": "48 x 66 1-12\" Leaf",
+   "Red Oak": 1054,
+   "Cherry": 1232,
+   "Brown Maple": 1257,
+   "Quartersawn White Oak": 1454,
+   "Hard Maple": 1479
+ },
+ {
+   "Size": "48 x 66 2-12\" Leaves",
+   "Red Oak": 1125,
+   "Cherry": 1314,
+   "Brown Maple": 1341,
+   "Quartersawn White Oak": 1549,
+   "Hard Maple": 1577
+ },
+ {
+   "Size": "48 x 66 3-12\" Leaves",
+   "Red Oak": 1196,
+   "Cherry": 1396,
+   "Brown Maple": 1426,
+   "Quartersawn White Oak": 1645,
+   "Hard Maple": 1675
+ },
+ {
+   "Size": "48 x 66 4-12\" Leaves",
+   "Red Oak": 1283,
+   "Cherry": 1497,
+   "Brown Maple": 1519,
+   "Quartersawn White Oak": 1763,
+   "Hard Maple": 1786
+ },
+ {
+   "Size": "48 x 72 Solid Top",
+   "Red Oak": 973,
+   "Cherry": 1134,
+   "Brown Maple": 1160,
+   "Quartersawn White Oak": 1335,
+   "Hard Maple": 1360
+ },
+ {
+   "Size": "48 x 72 1-12\" Leaf",
+   "Red Oak": 1094,
+   "Cherry": 1276,
+   "Brown Maple": 1304,
+   "Quartersawn White Oak": 1503,
+   "Hard Maple": 1531
+ },
+ {
+   "Size": "48 x 72 2-12\" Leaves",
+   "Red Oak": 1165,
+   "Cherry": 1358,
+   "Brown Maple": 1388,
+   "Quartersawn White Oak": 1598,
+   "Hard Maple": 1629
+ },
+ {
+   "Size": "48 x 72 3-12\" Leaves",
+   "Red Oak": 1236,
+   "Cherry": 1439,
+   "Brown Maple": 1473,
+   "Quartersawn White Oak": 1693,
+   "Hard Maple": 1726
+ },
+ {
+   "Size": "48 x 72 4-12\" Leaves",
+   "Red Oak": 1323,
+   "Cherry": 1540,
+   "Brown Maple": 1566,
+   "Quartersawn White Oak": 1812,
+   "Hard Maple": 1837
+ }
+]
