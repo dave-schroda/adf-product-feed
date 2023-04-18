@@ -18,7 +18,7 @@ jQuery(document).ready(function ($) {
         selectedPrice = originalPrice + selectedWoodPrice; // Update the selectedPrice variable
 
         // Apply the markup percentage
-        selectedPrice = selectedPrice * (markup_percentage / 100);
+        selectedPrice = Math.ceil(selectedPrice * (customProductOptionsData.markup_percentage / 100));
 
         priceElement.text('$' + selectedPrice.toFixed(2));
     }
