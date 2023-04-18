@@ -1,0 +1,20 @@
+:root {
+    --wd-form-brd-radius: 0px;
+    --wd-form-brd-width: 2px;
+    --btn-default-color: rgb(1,1,1);
+    --btn-default-color-hover: rgb(85,85,85);
+    --btn-default-brd-radius: 0px;
+    --btn-default-box-shadow: none;
+    --btn-default-box-shadow-hover: none;
+    --btn-default-box-shadow-active: none;
+    --btn-default-bottom: 0px;
+    --btn-accented-brd-radius: 0px;
+    --btn-accented-box-shadow: none;
+    --btn-accented-box-shadow-hover: none;
+    --btn-accented-box-shadow-active: none;
+    --btn-accented-bottom: 0px;
+    --wd-brd-radius: 0px;
+}
+
+.wp-core-ui .button-primary {background-color: var(--btn-default-color); border-color: var(--btn-default-color); border-radius: var(--wd-brd-radius);}
+.wp-core-ui .button-primary:hover {background-color: var(--btn-default-color-hover); border-color: var(--btn-default-color-hover)}
