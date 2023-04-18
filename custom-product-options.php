@@ -29,8 +29,6 @@ if (!class_exists('Custom_Product_Options')) {
                 add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
                 add_filter('woocommerce_add_cart_item_data', array($this, 'add_custom_options_to_cart_item_data'), 10, 3);
                 add_filter('woocommerce_get_item_data', array($this, 'display_custom_options_in_cart'), 10, 2);
-                add_filter('woocommerce_add_cart_item_data', array($this, 'add_cart_item_data'), 10, 2);
-
             } else {
                 add_action('admin_notices', array($this, 'woocommerce_missing_notice'));
             }
@@ -104,6 +102,7 @@ if (!class_exists('Custom_Product_Options')) {
         {
             echo '<div class="error"><p>' . sprintf(__('Custom Product Options requires %s to be installed and active.', 'custom-product-options'), '<a href="https://wordpress.org/plugins/woocommerce/" target="_blank">WooCommerce</a>') . '</p></div>';
         }
+
         public function add_custom_options_to_cart_item_data($cart_item_data, $product_id, $variation_id) {
             if (isset($_POST['custom_option_wood']) && isset($_POST['custom_option_size'])) {
                 $cart_item_data['custom_options'] = array(
@@ -114,6 +113,7 @@ if (!class_exists('Custom_Product_Options')) {
 
             return $cart_item_data;
         }
+
         public function display_custom_options_in_cart($item_data, $cart_item) {
             if (isset($cart_item['custom_options'])) {
                 $item_data[] = array(
@@ -129,25 +129,6 @@ if (!class_exists('Custom_Product_Options')) {
             }
 
             return $item_data;
-        }
-
-        public function add_cart_item_data($cart_item_data, $product_id)
-        {
-            if (isset($_POST['wood']) && isset($_POST['size'])) {
-                $wood = sanitize_text_field($_POST['wood']);
-                $size = sanitize_text_field($_POST['size']);
-                $sku = get_post_meta($product_id, '_sku', true);
-                $json_file_path = plugin_dir_path(__FILE__) . 'product-csv-files/' . $sku . '.json';
-
-                if (file_exists($json_file_path)) {
-                    $json_data = json_decode(file_get_contents($json_file_path), true);
-                    if ($json_data && isset($json_data['size'][$size]) && isset($json_data['size'][$size][$wood])) {
-                        $price = $json_data['size'][$size][$wood];
-                        $cart_item_data['custom_price'] = $price;
-                    }
-                }
-            }
-            return $cart_item_data;
         }
 
     }
