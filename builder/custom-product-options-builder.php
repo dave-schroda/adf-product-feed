@@ -60,16 +60,32 @@
 				}
 
 				// Options select boxes
-				if (array_key_exists('options', $json_data) && is_array($json_data['options'])) {
-				    foreach ($json_data['options'] as $option_key => $option) {
+				if (isset($json_data[0]['options']) && is_array($json_data[0]['options'])) {
+				    foreach ($json_data[0]['options'][0] as $option_key => $option_value) {
+				        // Skip the "price" key
+				        if ($option_key === 'price') {
+				            continue;
+				        }
+
 				        $option_name = ucwords(str_replace('_', ' ', $option_key));
 				        echo '<div class="custom-option">';
 				        echo '<label for="' . esc_attr($option_key) . '">' . esc_html($option_name) . '</label>';
 				        echo '<select id="' . esc_attr($option_key) . '" class="custom-option-select" data-option-key="' . esc_attr($option_key) . '">';
 				        echo '<option value="" data-price="0">Select ' . esc_html($option_name) . '</option>';
 
-				        foreach ($option as $value_key => $value) {
-				            echo '<option value="' . esc_attr($value_key) . '" data-prices=\'' . json_encode($value['prices']) . '\'>' . esc_html($value['display']) . '</option>';
+				        $unique_options = [];
+				        foreach ($json_data[0]['options'] as $option) {
+				            $option_value = $option[$option_key];
+				            $price = $option['price'];
+
+				            // Store unique option values and their corresponding price
+				            if (!isset($unique_options[$option_value])) {
+				                $unique_options[$option_value] = $price;
+				            }
+				        }
+
+				        foreach ($unique_options as $unique_option_value => $price) {
+				            echo '<option value="' . esc_attr($unique_option_value) . '" data-price=\'' . json_encode($price) . '\'>' . esc_html($unique_option_value) . '</option>';
 				        }
 
 				        echo '</select>';
