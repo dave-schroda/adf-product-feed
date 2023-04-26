@@ -5,17 +5,25 @@ jQuery(document).ready(function ($) {
     var priceText = priceElement.text();
     var priceMatch = priceText.match(/(\d+(?:\.\d+)?)/);
     var originalPrice = priceMatch ? parseFloat(priceMatch[0]) : 0;
-    
-    // Declare a variable to store the selected price at the beginning of the script
-    var selectedPrice = 0;
 
     function updateProductPrice() {
-        var woodSelect = $('#wood');
-        var sizeSelect = $('#size');
-        var selectedSizeOption = sizeSelect.find('option:selected');
-        var woodPrices = selectedSizeOption.data('prices') || {};
-        var selectedWoodPrice = parseFloat(woodPrices[woodSelect.val()]) || 0;
-        selectedPrice = originalPrice + selectedWoodPrice; // Update the selectedPrice variable
+        var optionKey = '';
+
+        // Generate the option key dynamically
+        $('.custom-option-select:not(#wood)').each(function () {
+            var selectedValue = $(this).val();
+            if (selectedValue !== '') {
+                optionKey += $(this).data('option-key') + '_' + selectedValue;
+            }
+        });
+
+        var selectedWood = $('#wood').val();
+        if (selectedWood !== '') {
+            var woodPrices = $('#wood option:selected').data('prices') || {};
+            selectedPrice = woodPrices[optionKey] || 0;
+        } else {
+            selectedPrice = 0;
+        }
 
         // Apply the markup percentage
         selectedPrice = Math.ceil(selectedPrice * (customProductOptionsData.markup_percentage / 100));
@@ -56,14 +64,14 @@ jQuery(document).ready(function ($) {
 
     // pass the selected options to the cart item data when the product is added to the cart
     $('form.cart').on('submit', function (e) {
-        $('<input />').attr('type', 'hidden')
-            .attr('name', 'custom_option_wood')
-            .attr('value', $('#wood').val())
-            .appendTo('form.cart');
-        $('<input />').attr('type', 'hidden')
-            .attr('name', 'custom_option_size')
-            .attr('value', $('#size').val())
-            .appendTo('form.cart');
+        $('.custom-option-select').each(function () {
+            var currentOption = $(this);
+            $('<input />').attr('type', 'hidden')
+                .attr('name', 'custom_option_' + currentOption.attr('id'))
+                .attr('value', currentOption.val())
+                .appendTo('form.cart');
+        });
+
         $('<input />').attr('type', 'hidden')
             .attr('name', 'selected_price') // Set the name attribute to 'selected_price'
             .attr('value', selectedPrice) // Set the value attribute to the selectedPrice variable

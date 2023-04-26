@@ -1,0 +1,267 @@
+[
+  {
+    "product_name": "Albany Single Pedestal Table",
+    "wood": {
+      "red_oak": "Red Oak",
+      "rustic_cherry": "Rustic Cherry",
+      "sap_cherry": "Sap Cherry",
+      "wormy_maple": "Wormy Maple",
+      "rustic_red_oak": "Rustic Red Oak",
+      "rustic_brown_maple": "Rustic Brown Maple",
+      "brown_maple": "Brown Maple",
+      "cherry": "Cherry",
+      "hickory": "Hickory",
+      "rustic_hickory": "Rustic Hickory",
+      "rustic_quartersawn_white_oak": "Rustic Quartersawn White Oak",
+      "quartersawn_white_oak": "Quartersawn White Oak",
+      "grey_elm": "Grey Elm",
+      "hard_maple": "Hard Maple",
+      "rustic_walnut": "Rustic Walnut",
+      "clean_walnut": "Clean Walnut"
+    },
+    "options": [
+      {
+        "leaves": "Solid Top",
+        "table_size": "48x48",
+        "price": {
+          "red_oak": 708,
+          "rustic_cherry": 779,
+          "sap_cherry": 779,
+          "wormy_maple": 779,
+          "rustic_red_oak": 779,
+          "rustic_brown_maple": 779,
+          "brown_maple": 787,
+          "cherry": 866,
+          "hickory": 866,
+          "rustic_hickory": 866,
+          "rustic_quartersawn_white_oak": 1091,
+          "quartersawn_white_oak": 1091,
+          "grey_elm": 1091,
+          "hard_maple": 1091,
+          "rustic_walnut": 1091,
+          "clean_walnut": 1419
+        }
+      },
+      {
+        "leaves": "Solid Top",
+        "table_size": "54x54",
+        "price": {
+          "red_oak": 729,
+          "rustic_cherry": 802,
+          "sap_cherry": 802,
+          "wormy_maple": 802,
+          "rustic_red_oak": 802,
+          "rustic_brown_maple": 802,
+          "brown_maple": 814,
+          "cherry": 896,
+          "hickory": 896,
+          "rustic_hickory": 896,
+          "rustic_quartersawn_white_oak": 1122,
+          "quartersawn_white_oak": 1122,
+          "grey_elm": 1122,
+          "hard_maple": 1122,
+          "rustic_walnut": 1122,
+          "clean_walnut": 1459
+        }
+      },
+      {
+        "leaves": "Solid Top",
+        "table_size": "60x60",
+        "price": {
+          "red_oak": 776,
+          "rustic_cherry": 854,
+          "sap_cherry": 854,
+          "wormy_maple": 854,
+          "rustic_red_oak": 854,
+          "rustic_brown_maple": 854,
+          "brown_maple": 862,
+          "cherry": 949,
+          "hickory": 949,
+          "rustic_hickory": 949,
+          "rustic_quartersawn_white_oak": 1216,
+          "quartersawn_white_oak": 1216,
+          "grey_elm": 1216,
+          "hard_maple": 1216,
+          "rustic_walnut": 1216,
+          "clean_walnut": 1581
+        }
+      },
+      {
+        "leaves": "(1) 12\" Leaf",
+        "table_size": "48x48",
+        "price": {
+          "red_oak": 785,
+          "rustic_cherry": 864,
+          "sap_cherry": 864,
+          "wormy_maple": 864,
+          "rustic_red_oak": 864,
+          "rustic_brown_maple": 864,
+          "brown_maple": 867,
+          "cherry": 954,
+          "hickory": 954,
+          "rustic_hickory": 954,
+          "rustic_quartersawn_white_oak": 1204,
+          "quartersawn_white_oak": 1204,
+          "grey_elm": 1204,
+          "hard_maple": 1204,
+          "rustic_walnut": 1204,
+          "clean_walnut": 1566
+        }
+      },
+      {
+        "leaves": "(1) 12\" Leaf",
+        "table_size": "54x54",
+        "price": {
+          "red_oak": 809,
+          "rustic_cherry": 890,
+          "sap_cherry": 890,
+          "wormy_maple": 890,
+          "rustic_red_oak": 890,
+          "rustic_brown_maple": 890,
+          "brown_maple": 899,
+          "cherry": 989,
+          "hickory": 989,
+          "rustic_hickory": 989,
+          "rustic_quartersawn_white_oak": 1240,
+          "quartersawn_white_oak": 1240,
+          "grey_elm": 1240,
+          "hard_maple": 1240,
+          "rustic_walnut": 1240,
+          "clean_walnut": 1612
+        }
+      },
+      {
+        "leaves": "(1) 12\" Leaf",
+        "table_size": "60x60",
+        "price": {
+          "red_oak": 869,
+          "rustic_cherry": 956,
+          "sap_cherry": 956,
+          "wormy_maple": 956,
+          "rustic_red_oak": 956,
+          "rustic_brown_maple": 956,
+          "brown_maple": 961,
+          "cherry": 1058,
+          "hickory": 1058,
+          "rustic_hickory": 1058,
+          "rustic_quartersawn_white_oak": 1353,
+          "quartersawn_white_oak": 1353,
+          "grey_elm": 1353,
+          "hard_maple": 1353,
+          "rustic_walnut": 1353,
+          "clean_walnut": 1759
+        }
+      },
+      {
+        "leaves": "(2) 12\" Leaves",
+        "table_size": "48x48",
+        "price": {
+          "red_oak": 825,
+          "rustic_cherry": 908,
+          "sap_cherry": 908,
+          "wormy_maple": 908,
+          "rustic_red_oak": 908,
+          "rustic_brown_maple": 908,
+          "brown_maple": 912,
+          "cherry": 1004,
+          "hickory": 1004,
+          "rustic_hickory": 1004,
+          "rustic_quartersawn_white_oak": 1263,
+          "quartersawn_white_oak": 1263,
+          "grey_elm": 1263,
+          "hard_maple": 1263,
+          "rustic_walnut": 1263,
+          "clean_walnut": 1642
+        }
+      },
+      {
+        "leaves": "(2) 12\" Leaves",
+        "table_size": "54x54",
+        "price": {
+          "red_oak": 854,
+          "rustic_cherry": 940,
+          "sap_cherry": 940,
+          "wormy_maple": 940,
+          "rustic_red_oak": 940,
+          "rustic_brown_maple": 940,
+          "brown_maple": 948,
+          "cherry": 1043,
+          "hickory": 1043,
+          "rustic_hickory": 1043,
+          "rustic_quartersawn_white_oak": 1306,
+          "quartersawn_white_oak": 1306,
+          "grey_elm": 1306,
+          "hard_maple": 1306,
+          "rustic_walnut": 1306,
+          "clean_walnut": 1698
+        }
+      },
+      {
+        "leaves": "(2) 12\" Leaves",
+        "table_size": "60x60",
+        "price": {
+          "red_oak": 917,
+          "rustic_cherry": 1009,
+          "sap_cherry": 1009,
+          "wormy_maple": 1009,
+          "rustic_red_oak": 1009,
+          "rustic_brown_maple": 1009,
+          "brown_maple": 1014,
+          "cherry": 1116,
+          "hickory": 1116,
+          "rustic_hickory": 1116,
+          "rustic_quartersawn_white_oak": 1423,
+          "quartersawn_white_oak": 1423,
+          "grey_elm": 1423,
+          "hard_maple": 1423,
+          "rustic_walnut": 1423,
+          "clean_walnut": 1850
+        }
+      },
+      {
+        "leaves": "(1) 18\" Butterfly Leaf",
+        "table_size": "48x48",
+        "price": {
+          "red_oak": 943,
+          "rustic_cherry": 1038,
+          "sap_cherry": 1038,
+          "wormy_maple": 1038,
+          "rustic_red_oak": 1038,
+          "rustic_brown_maple": 1038,
+          "brown_maple": 1030,
+          "cherry": 1133,
+          "hickory": 1133,
+          "rustic_hickory": 1133,
+          "rustic_quartersawn_white_oak": 1392,
+          "quartersawn_white_oak": 1392,
+          "grey_elm": 1392,
+          "hard_maple": 1392,
+          "rustic_walnut": 1392,
+          "clean_walnut": 1810
+        }
+      },
+      {
+        "leaves": "(1) 18\" Butterfly Leaf",
+        "table_size": "54x54",
+        "price": {
+          "red_oak": 972,
+          "rustic_cherry": 1070,
+          "sap_cherry": 1070,
+          "wormy_maple": 1070,
+          "rustic_red_oak": 1070,
+          "rustic_brown_maple": 1070,
+          "brown_maple": 1066,
+          "cherry": 1173,
+          "hickory": 1173,
+          "rustic_hickory": 1173,
+          "rustic_quartersawn_white_oak": 1435,
+          "quartersawn_white_oak": 1435,
+          "grey_elm": 1435,
+          "hard_maple": 1435,
+          "rustic_walnut": 1435,
+          "clean_walnut": 1866
+        }
+      }
+    ]
+  }
+]
