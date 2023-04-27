@@ -44,7 +44,7 @@ if (!class_exists('Custom_Product_Options')) {
         {
             wp_enqueue_script('custom-product-options-script', plugin_dir_url(__FILE__) . 'js/custom-product-options.js', array('jquery'), '1.0.0', true);
 
-            // Pass the markup_percentage to the JavaScript script
+            // Pass the markup_percentage to the JS script
             $markup_percentage = get_option('markup_percentage', 100);
             wp_localize_script('custom-product-options-script', 'customProductOptionsData', array(
                 'markup_percentage' => $markup_percentage,
@@ -96,8 +96,6 @@ if (!class_exists('Custom_Product_Options')) {
                 }
             }
         }
-
-
     }
 
     new Custom_Product_Options();

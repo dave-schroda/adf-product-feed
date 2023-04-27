@@ -28,14 +28,22 @@
                 return;
             }
 
-            $json_file_path = plugin_dir_path(dirname(__FILE__)) . 'product-csv-files/' . $manufacturer_folder . '/' . $formatted_product_name . '.json';
+            $json_file_url = plugins_url('product-csv-files/' . $manufacturer_folder . '/' . $formatted_product_name . '.json', dirname(__FILE__));
+
+            // Enqueue your script and pass the JSON file path
+		    wp_localize_script('custom-product-options-script', 'php_vars', array('json_file_url' => $json_file_url));
 
             // Display the JSON file path on the product page
             echo '<!-- JSON file path: ' . htmlspecialchars($json_file_path) . ' -->';
 
-            // Read the JSON file and decode it into an array
-			$json_data_raw = file_get_contents($json_file_path);
-			$json_data = json_decode($json_data_raw, true);
+			$response = wp_remote_get($json_file_url);
+
+			if (is_wp_error($response)) {
+			    error_log('Failed to get JSON file: ' . $response->get_error_message());
+			} else {
+			    $json_data_raw = wp_remote_retrieve_body($response);
+			    $json_data = json_decode($json_data_raw, true);
+			}
 
 			if ($json_data !== null) {
 	            echo '<!-- Generating select boxes -->';
