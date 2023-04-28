@@ -34,7 +34,7 @@
 		    wp_localize_script('custom-product-options-script', 'php_vars', array('json_file_url' => $json_file_url));
 
             // Display the JSON file path on the product page
-            echo '<!-- JSON file path: ' . htmlspecialchars($json_file_path) . ' -->';
+            echo '<!-- JSON file path: ' . htmlspecialchars($json_file_url) . ' -->';
 
 			$response = wp_remote_get($json_file_url);
 
@@ -46,28 +46,28 @@
 			}
 
 			if ($json_data !== null) {
-	            echo '<!-- Generating select boxes -->';
-	            echo '<div class="custom-product-options">';
-	            echo '<input type="hidden" id="selected-price" name="selected_price" value="0">';
-	            echo '<p class="price-message">See price after choosing your options</p>';
-	            echo '<style> p.price { display: none; } </style>';
+	            echo '<!-- Generating radio buttons -->';
+				echo '<div id="custom-product-options">';
+				echo '<input type="hidden" id="selected-price" name="selected_price" value="0">';
+				echo '<p class="price-message">See price after choosing your options</p>';
+				echo '<style> p.price { display: none; } </style>';
 
-	            // Wood select box
+				// Wood radio buttons
 				if (isset($json_data[0]['wood']) && is_array($json_data[0]['wood'])) {
 				    echo '<div class="custom-option">';
-				    echo '<label for="wood">Wood</label>';
-				    echo '<select id="wood" class="custom-option-select" data-option-key="wood">';
-				    echo '<option value="" data-price="0">Select Wood</option>';
+				    echo '<h3 class="accordion-header">Wood: <span class="option-text">Choose an option</span></h3><div class="accordion-section">';
 
 				    foreach ($json_data[0]['wood'] as $wood_key => $wood_name) {
-				        echo '<option value="' . esc_attr($wood_key) . '" data-price="0">' . esc_html($wood_name) . '</option>';
+				        echo '<div class="wood-radio-option">';
+				        echo '<input type="radio" id="' . esc_attr($wood_key) . '" class="custom-option-radio wood-option-radio" name="wood" value="' . esc_attr($wood_key) . '" data-price="0">';
+				        echo '<label for="' . esc_attr($wood_key) . '">' . esc_html($wood_name) . '</label>';
+				        echo '</div>';
 				    }
 
-				    echo '</select>';
-				    echo '</div>';
+				    echo '</div></div>';
 				}
 
-				// Options select boxes
+				// Options radio buttons
 				if (isset($json_data[0]['options']) && is_array($json_data[0]['options'])) {
 				    foreach ($json_data[0]['options'][0] as $option_key => $option_value) {
 				        // Skip the "price" key
@@ -77,27 +77,25 @@
 
 				        $option_name = ucwords(str_replace('_', ' ', $option_key));
 				        echo '<div class="custom-option">';
-				        echo '<label for="' . esc_attr($option_key) . '">' . esc_html($option_name) . '</label>';
-				        echo '<select id="' . esc_attr($option_key) . '" class="custom-option-select" data-option-key="' . esc_attr($option_key) . '">';
-				        echo '<option value="" data-price="0">Select ' . esc_html($option_name) . '</option>';
+				        echo '<h3 class="accordion-header disabled">' . esc_html($option_name) . ': <span class="option-text">Choose an option</span></h3><div class="accordion-section">';
 
 				        $unique_options = [];
 				        foreach ($json_data[0]['options'] as $option) {
 				            $option_value = $option[$option_key];
-				            $price = $option['price'];
-
-				            // Store unique option values and their corresponding price
-				            if (!isset($unique_options[$option_value])) {
-				                $unique_options[$option_value] = $price;
+				            // Store unique option values
+				            if (!in_array($option_value, $unique_options)) {
+				                $unique_options[] = $option_value;
 				            }
 				        }
 
-				        foreach ($unique_options as $unique_option_value => $price) {
-				            echo '<option value="' . esc_attr($unique_option_value) . '" data-price=\'' . json_encode($price) . '\'>' . esc_html($unique_option_value) . '</option>';
+				        foreach ($unique_options as $unique_option_value) {
+				            echo '<div class="option-radio-option">';
+				            echo '<input type="radio" id="' . esc_attr($unique_option_value) . '" class="custom-option-radio" name="' . esc_attr($option_key) . '" value="' . esc_attr($unique_option_value) . '">';
+				            echo '<label for="' . esc_attr($unique_option_value) . '">' . esc_html($unique_option_value) . '</label>';
+				            echo '</div>';
 				        }
 
-				        echo '</select>';
-				        echo '</div>';
+				        echo '</div></div>';
 				    }
 				} else {
 				    echo '<!-- Options data not found in JSON data -->';

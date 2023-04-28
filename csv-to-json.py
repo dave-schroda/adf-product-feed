@@ -22,8 +22,8 @@ def main():
                 continue  # Skip empty rows
 
             option = {
-                "leaves": row[0],
-                "table_size": row[1],
+                "table_size": row[0],
+                "leaves": row[1],
                 "price": {}
             }
             for i, wood in enumerate(wood_types):

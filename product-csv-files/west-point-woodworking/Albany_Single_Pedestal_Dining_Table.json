@@ -1,6 +1,6 @@
 [
   {
-    "product_name": "Albany Single Pedestal Table",
+    "product_name": "Albany Single Pedestal Dining Table",
     "wood": {
       "red_oak": "Red Oak",
       "rustic_cherry": "Rustic Cherry",
@@ -21,8 +21,8 @@
     },
     "options": [
       {
-        "leaves": "Solid Top",
         "table_size": "48x48",
+        "leaves": "Solid Top",
         "price": {
           "red_oak": 708,
           "rustic_cherry": 779,
@@ -43,8 +43,8 @@
         }
       },
       {
-        "leaves": "Solid Top",
         "table_size": "54x54",
+        "leaves": "Solid Top",
         "price": {
           "red_oak": 729,
           "rustic_cherry": 802,
@@ -65,8 +65,8 @@
         }
       },
       {
-        "leaves": "Solid Top",
         "table_size": "60x60",
+        "leaves": "Solid Top",
         "price": {
           "red_oak": 776,
           "rustic_cherry": 854,
@@ -87,8 +87,8 @@
         }
       },
       {
-        "leaves": "(1) 12\" Leaf",
         "table_size": "48x48",
+        "leaves": "(1) 12\" Leaf",
         "price": {
           "red_oak": 785,
           "rustic_cherry": 864,
@@ -109,8 +109,8 @@
         }
       },
       {
-        "leaves": "(1) 12\" Leaf",
         "table_size": "54x54",
+        "leaves": "(1) 12\" Leaf",
         "price": {
           "red_oak": 809,
           "rustic_cherry": 890,
@@ -131,8 +131,8 @@
         }
       },
       {
-        "leaves": "(1) 12\" Leaf",
         "table_size": "60x60",
+        "leaves": "(1) 12\" Leaf",
         "price": {
           "red_oak": 869,
           "rustic_cherry": 956,
@@ -153,8 +153,8 @@
         }
       },
       {
-        "leaves": "(2) 12\" Leaves",
         "table_size": "48x48",
+        "leaves": "(2) 12\" Leaves",
         "price": {
           "red_oak": 825,
           "rustic_cherry": 908,
@@ -175,8 +175,8 @@
         }
       },
       {
-        "leaves": "(2) 12\" Leaves",
         "table_size": "54x54",
+        "leaves": "(2) 12\" Leaves",
         "price": {
           "red_oak": 854,
           "rustic_cherry": 940,
@@ -197,8 +197,8 @@
         }
       },
       {
-        "leaves": "(2) 12\" Leaves",
         "table_size": "60x60",
+        "leaves": "(2) 12\" Leaves",
         "price": {
           "red_oak": 917,
           "rustic_cherry": 1009,
@@ -219,8 +219,8 @@
         }
       },
       {
-        "leaves": "(1) 18\" Butterfly Leaf",
         "table_size": "48x48",
+        "leaves": "(1) 18\" Butterfly Leaf",
         "price": {
           "red_oak": 943,
           "rustic_cherry": 1038,
@@ -241,8 +241,8 @@
         }
       },
       {
-        "leaves": "(1) 18\" Butterfly Leaf",
         "table_size": "54x54",
+        "leaves": "(1) 18\" Butterfly Leaf",
         "price": {
           "red_oak": 972,
           "rustic_cherry": 1070,

@@ -42,7 +42,14 @@ if (!class_exists('Custom_Product_Options')) {
 
         public function enqueue_scripts()
         {
-            wp_enqueue_script('custom-product-options-script', plugin_dir_url(__FILE__) . 'js/custom-product-options.js', array('jquery'), '1.0.0', true);
+            // Frontend JS
+            wp_enqueue_script('custom-product-options-script', plugin_dir_url(__FILE__) . 'frontend/js/custom-product-options.js', array('jquery'), '1.0.0', true);
+            wp_register_script( 'jquery-ui', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js', true );
+            wp_enqueue_script('jquery-ui');
+
+            // Frontend CSS
+            wp_enqueue_style('custom-product-options-css', plugin_dir_url(__FILE__) . 'frontend/css/custom-product-options-frontend.css', '1.0.0', true);
+
 
             // Pass the markup_percentage to the JS script
             $markup_percentage = get_option('markup_percentage', 100);
