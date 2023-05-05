@@ -2,6 +2,7 @@ jQuery(document).ready(function ($) {
     var priceElement = $('p.price span.woocommerce-Price-amount.amount');
     var priceContainer = $('p.price');
     var priceMessage = $('.price-message');
+    var finalPrice = 0; // Declare finalPrice at a higher scope
 
     var jsonData; // Store JSON data
 
@@ -17,7 +18,7 @@ jQuery(document).ready(function ($) {
 
     function updateProductPrice() {
         console.log('Updating product price...');
-        var finalPrice = 0;
+        finalPrice = 0;
 
         var selectedWood = $('input[name="wood"]:checked').val();
         var selectedOptions = {};
@@ -70,6 +71,72 @@ jQuery(document).ready(function ($) {
         priceElement.text('$' + finalPrice.toFixed(2));
     }
 
+    function updateOptionAvailability() {
+        console.log('Updating option availability...');
+
+        // Get all selected options
+        var selectedOptions = {};
+        $('.custom-option-radio:checked, .wood-option-radio:checked').each(function() {
+            var selectedValue = $(this).val();
+            selectedOptions[$(this).attr('name')] = selectedValue;
+        });
+
+        // Identify unique groups of options
+        var optionGroups = [];
+        $('.custom-option-radio, .wood-option-radio').each(function () {
+            var groupName = $(this).attr('name');
+            if ($.inArray(groupName, optionGroups) === -1) {
+                optionGroups.push(groupName);
+            }
+        });
+
+        // Loop over each radio group
+        optionGroups.forEach(function(group) {
+            // Loop over each option in the current radio group
+            $('input[name="' + group + '"]').each(function() {
+                var optionValue = $(this).val();
+
+                // Check if there's any combination in the JSON data that includes the currently selected options and this option value
+                var isOptionAvailable = $.isEmptyObject(selectedOptions); // If no options have been selected yet, consider the option as available
+                jsonData.forEach(function(item) {
+                    item.options.forEach(function(option) {
+                        var isCombinationValid = true;
+                        var combinedOptions = Object.assign({}, selectedOptions, {[group]: optionValue});
+                        for (var key in combinedOptions) {
+                            if (key === "wood" && !(combinedOptions[key] in option.price)) {
+                                isCombinationValid = false;
+                                break;
+                            } else if (key !== "wood" && option[key] !== combinedOptions[key]) {
+                                isCombinationValid = false;
+                                break;
+                            }
+                        }
+                        // Only consider the option as available if it is valid
+                        if (isCombinationValid) {
+                            isOptionAvailable = true;
+                        }
+                    });
+                });
+
+                // If the option is available, enable it, otherwise disable it
+                var $thisOption = $(this);
+                $thisOption.prop('disabled', !isOptionAvailable);
+                
+                // If the option is selected but now disabled, uncheck it and trigger a change event
+                if (!isOptionAvailable && $thisOption.is(':checked')) {
+                    $thisOption.prop('checked', false);
+                }
+            });
+        });
+    }
+
+    // Call the function whenever a radio button is clicked
+    $('.custom-option-radio, .wood-option-radio').on('click', function() {
+        // Allow the radio button selection to update first
+        setTimeout(updateOptionAvailability, 0);
+    });
+
+
     function checkOptionsSelected() {
         var allSelected = true;
 
@@ -83,7 +150,7 @@ jQuery(document).ready(function ($) {
 
         for (var i = 0; i < optionGroups.length; i++) {
             var group = optionGroups[i];
-            if ($('input[name="' + group + '"]:checked').length === 0) {
+            if ($('input[name="' + group + '"]:checked:not(:disabled)').length === 0) {
                 allSelected = false;
                 break;
             }
@@ -104,61 +171,8 @@ jQuery(document).ready(function ($) {
         }
     }
 
-    function updateOptionAvailability() {
-        // Get all selected options
-        var selectedOptions = {};
-        $('.custom-option-radio:checked').each(function() {
-            var selectedValue = $(this).val();
-            if (selectedValue) {
-                selectedOptions[$(this).attr('name')] = selectedValue;
-            }
-        });
-
-        // Loop over each radio group, excluding wood options
-        var radioGroups = ['leaves', 'table_size'];
-        radioGroups.forEach(function(group) {
-            // Default all options to be disabled
-            $('input[name="' + group + '"]').prop('disabled', true);
-
-            // Loop over each option in the current radio group
-            $('input[name="' + group + '"]').each(function() {
-                var optionValue = $(this).val();
-
-                // Check if the current option is available in the JSON data considering the other selected options
-                jsonData.forEach(function(item) {
-                    item.options.forEach(function(option) {
-                        // Prepare a copy of selected options with the current option replaced
-                        var currentOptions = Object.assign({}, selectedOptions, {[group]: optionValue});
-
-                        // Exclude the wood selection from the current options
-                        delete currentOptions['wood'];
-
-                        // Check if the current combination of options is available
-                        var isAvailable = true;
-                        for (var key in currentOptions) {
-                            if (!option[key] || option[key] !== currentOptions[key]) {
-                                isAvailable = false;
-                                break;
-                            }
-                        }
-
-                        // If the wood is not in the price object, then this combination is not available
-                        if (selectedOptions['wood'] && !(selectedOptions['wood'] in option.price)) {
-                            isAvailable = false;
-                        }
-
-                        // If the current combination is available, enable the current option
-                        if (isAvailable) {
-                            $('input[value="' + optionValue.replace(/"/g, '\\"') + '"]').prop('disabled', false);
-                        }
-                    });
-                });
-            });
-        });
-    }
-
     $('.custom-option-radio, .wood-option-radio').on('change', function () {
-        updateOptionAvailability();
+        updateOptionAvailability(); // and here
         updateProductPrice();
         updateAddToCartButton();
     });
@@ -167,10 +181,18 @@ jQuery(document).ready(function ($) {
     $('form.cart').on('submit', function (e) {
         $('.custom-option-radio').each(function () {
             var currentOption = $(this);
-            $('<input />').attr('type', 'hidden')
-                .attr('name', 'custom_option_' + currentOption.attr('id'))
-                .attr('value', currentOption.val())
-                .appendTo('form.cart');
+            if (currentOption.is(':checked')) { // Check if the current option is selected
+                var optionName = currentOption.attr('name');
+                var optionLabel = $('input[name="label_' + optionName + '"]').val();
+                $('<input />').attr('type', 'hidden')
+                    .attr('name', 'custom_option_' + optionName)
+                    .attr('value', currentOption.val())
+                    .appendTo('form.cart');
+                $('<input />').attr('type', 'hidden')
+                    .attr('name', 'label_' + optionName)
+                    .attr('value', optionLabel)
+                    .appendTo('form.cart');
+            }
         });
 
         $('<input />').attr('type', 'hidden')
@@ -193,7 +215,8 @@ jQuery(document).ready(function ($) {
 
     // Add event listeners to update the accordion title and control the accordion behavior
     $('.custom-option-radio').on("change", function() {
-        const selectedOptionId = $(this).attr('id');
+        let selectedOptionId = $(this).attr('id');
+        selectedOptionId = selectedOptionId.replace(/"/g, '\\"'); // Escape the double quotes
         const selectedOptionLabel = $('label[for="' + selectedOptionId + '"]').text();
 
         const currentAccordion = $(this).closest('.custom-option');

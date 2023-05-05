@@ -57,6 +57,9 @@
 				    echo '<div class="custom-option">';
 				    echo '<h3 class="accordion-header">Wood: <span class="option-text">Choose an option</span></h3><div class="accordion-section">';
 
+				    // Add a hidden field with the group label
+				    echo '<input type="hidden" name="label_wood" value="Wood">';
+
 				    foreach ($json_data[0]['wood'] as $wood_key => $wood_name) {
 				        echo '<div class="wood-radio-option">';
 				        echo '<input type="radio" id="' . esc_attr($wood_key) . '" class="custom-option-radio wood-option-radio" name="wood" value="' . esc_attr($wood_key) . '" data-price="0">';
@@ -78,6 +81,9 @@
 				        $option_name = ucwords(str_replace('_', ' ', $option_key));
 				        echo '<div class="custom-option">';
 				        echo '<h3 class="accordion-header disabled">' . esc_html($option_name) . ': <span class="option-text">Choose an option</span></h3><div class="accordion-section">';
+
+				        // Add a hidden field with the group label
+				        echo '<input type="hidden" name="label_' . esc_attr($option_key) . '" value="' . esc_html($option_name) . '">';
 
 				        $unique_options = [];
 				        foreach ($json_data[0]['options'] as $option) {
